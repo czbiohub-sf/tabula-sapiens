@@ -1,7 +1,5 @@
 # tabula-sapiens
 
-Welcome to the most exciting Tabula so far!
+Welcome to the most exciting Tabula so far! To interact with the data checkout our portal: http://tabula-sapiens.ds.czbiohub.org/
 
 ![logo](sapiens_logo.png)
-
-To interact with the data checkout our portal: http://tabula-sapiens.ds.czbiohub.org/
