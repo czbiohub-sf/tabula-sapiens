@@ -1,6 +1,6 @@
 # tabula-sapiens
 
-Welcome to the most exciting Tabula so far!
+Welcome to the most exciting Tabula!
 
 <img src="https://github.com/czbiohub/tabula-sapiens/blob/master/sapiens_logo.png" width="50%" height="50%">
 
