@@ -52,10 +52,12 @@ data.labels = data.labels.reshape(len(data.labels), 1)
 data.n_labels = len(data.cell_types)
 
 # generate prediction for all cells at once
-full, pred_celltype = scanvi_pred(data, model_file)
+scanvi_model_file = '%s/scVImodels/scanvi.%s.%s.ann2.pkl' % (data_path, tissue, 'combined')
+full, pred_celltype = scanvi_pred(data, model_file, scanvi_model_file)
 raw.obs['pred2'] = pred_celltype
 
-full, pred_celltype = scanvi_pred(data, model_file, alternate=True)
+scanvi_model_file = '%s/scVImodels/scanvi.%s.%s.alternate.ann2.pkl' % (data_path, tissue, 'combined')
+full, pred_celltype = scanvi_pred(data, model_file, scanvi_model_file, alternate=True)
 raw.obs['pred2_alternate'] = pred_celltype
 
 if tissue is 'muscle':
@@ -71,7 +73,8 @@ for compartment in compartments:
     labels = [data.cell_types[i] for i in data_subset.labels.ravel()]
     data_subset.cell_types, labels = np.unique(labels, return_inverse=True)
     data_subset.labels = labels.reshape(len(labels), 1)
-    full_subset, pred_subset = scanvi_pred(data_subset, model_file)
+    scanvi_model_file = '%s/scVImodels/scanvi.%s.%s.ann2.pkl' % (data_path, tissue, compartment)
+    full_subset, pred_subset = scanvi_pred(data_subset, model_file, scanvi_model_file)
     raw.obs.loc[raw.obs['smooth_comp'] == compartment, 'pred_by_compartment'] = np.asarray(pred_subset)
 
 
@@ -85,7 +88,8 @@ for compartment in compartments:
     labels = [data.cell_types[i] for i in data_subset.labels.ravel()]
     data_subset.cell_types, labels = np.unique(labels, return_inverse=True)
     data_subset.labels = labels.reshape(len(labels), 1)
-    full_subset, pred_subset = scanvi_pred(data_subset, model_file, alternate=True)
+    scanvi_model_file = '%s/scVImodels/scanvi.%s.%s.alternate.ann2.pkl' % (data_path, tissue, compartment)
+    full_subset, pred_subset = scanvi_pred(data_subset, model_file, scanvi_model_file, alternate=True)
     raw.obs.loc[raw.obs['smooth_comp'] == compartment, 'pred_by_compartment_alternate'] = np.asarray(pred_subset)
     raw.obs['pred_by_compartment_alternate'].fillna('nan', inplace=True)
 
