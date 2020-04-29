@@ -26,7 +26,8 @@ def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=150,
         train_size=0.99,
         use_cuda=use_cuda,
         frequency=5,
-        data_loader_kwargs={"pin_memory": False}
+        data_loader_kwargs={"pin_memory": False},
+        n_iter_kl_warmup = 1600
     )
 
     torch.manual_seed(seed)
@@ -54,7 +55,7 @@ def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=150,
     return posterior
 
 
-def balance_n_labelled(l, labelled, nlabels=20):
+def balance_n_labelled(l, labelled, nlabels=30):
     balanced_labelled = []
     for i in np.unique(l[labelled]):
         idx = np.where(l == i)[0]
@@ -67,41 +68,63 @@ def balance_n_labelled(l, labelled, nlabels=20):
     return (balanced_labelled)
 
 
-def scanvi_pred(data, modelfile, balance=True, alternate=False):
-    if 'unassigned' in data.cell_types:
-        unlabelled_idx = list(data.cell_types).index('unassigned')
-        labelled = np.where(data.labels.ravel()!=unlabelled_idx)[0]
+def scanvi_pred(data, modelfile, scanvi_modelfile, balance=True, alternate=False, nlabels=30,
+                retrain=False, n_epochs=15, forward_only=False):
+    if forward_only:
+        print('Only predict based on pretrained model')
     else:
-        labelled = np.arange(len(data.labels))
+        if 'unassigned' in data.cell_types:
+            unlabelled_idx = list(data.cell_types).index('unassigned')
+            labelled = np.where(data.labels.ravel()!=unlabelled_idx)[0]
+        else:
+            labelled = np.arange(len(data.labels))
 
-    # balance number of labelled cells from each cell type
-    if balance is True:
-        labelled = balance_n_labelled(data.labels.ravel(), labelled)
-    labelled = np.random.choice(labelled, len(labelled), replace=False)
+        # balance number of labelled cells from each cell type
+        if balance is True:
+            labelled = balance_n_labelled(data.labels.ravel(), labelled, nlabels=nlabels)
+        labelled = np.random.choice(labelled, len(labelled), replace=False)
 
-    unlabelled = [x for x in np.arange(len(data.labels.ravel())) if x not in labelled]
-    unlabelled = np.random.choice(unlabelled, len(unlabelled), replace=False)
+        unlabelled = [x for x in np.arange(len(data.labels.ravel())) if x not in labelled]
+        unlabelled = np.random.choice(unlabelled, len(unlabelled), replace=False)
 
     scanvi = SCANVI(data.nb_genes, data.n_batches, data.n_labels, n_layers=2, n_latent=30,
                     symmetric_kl=True)
-    scanvi.load_state_dict(torch.load(modelfile), strict=False)
+
     if alternate is False:
         trainer_scanvi = SemiSupervisedTrainer(scanvi, data,
                                                n_epochs_classifier=100,
-                                               lr_classification=5 * 1e-3)
+                                               lr_classification=5 * 1e-3, seed=1,
+                                               n_epochs_kl_warmup=1)
     else:
         trainer_scanvi = AlternateSemiSupervisedTrainer(scanvi, data,
                                                         n_epochs_classifier=100,
-                                                        lr_classification=5 * 1e-3)
+                                                        lr_classification=5 * 1e-3,
+                                                        n_epochs_kl_0warmup=1)
 
-    trainer_scanvi.labelled_set = trainer_scanvi.create_posterior(indices=labelled)
-    trainer_scanvi.unlabelled_set = trainer_scanvi.create_posterior(indices=unlabelled)
-    trainer_scanvi.train(n_epochs=15)
+    if forward_only:
+        trainer_scanvi.model.load_state_dict(torch.load(scanvi_modelfile))
+        trainer_scanvi.model.eval()
+    else:
+        trainer_scanvi.model.load_state_dict(torch.load(modelfile), strict=False)
+        trainer_scanvi.model.eval()
+        trainer_scanvi.labelled_set = trainer_scanvi.create_posterior(indices=labelled)
+        trainer_scanvi.unlabelled_set = trainer_scanvi.create_posterior(indices=unlabelled)
+        if retrain:
+            trainer_scanvi.train(n_epochs=n_epochs)
+            torch.save(trainer_scanvi.model.state_dict(), scanvi_modelfile)
+        else:
+            if os.path.isfile(scanvi_modelfile):
+                trainer_scanvi.model.load_state_dict(torch.load(scanvi_modelfile))
+                trainer_scanvi.model.eval()
+            else:
+                trainer_scanvi.train(n_epochs=n_epochs)
+                torch.save(trainer_scanvi.model.state_dict(), scanvi_modelfile)
+
     full = trainer_scanvi.create_posterior(trainer_scanvi.model, data, indices=np.arange(len(data)))
     _, pred = full.sequential().compute_predictions()
-    pred_celltype = [data.cell_types[i] for i in pred]
+    # pred_celltype = [data.cell_types[i] for i in pred]
 
-    return full, pred_celltype
+    return full, pred
 
 
 def DEbyCompartment(raw, full, label, split, split_subset, filename):
