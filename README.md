@@ -7,7 +7,7 @@ Welcome to the most exciting Tabula!
 ## Where is the data
 
 ## How to use cellxgene
-Checkout detailed instructions [here]()
+Checkout detailed instructions [here](run-cellxgene.md)
 
 ## Data Portal
 To interact with the data checkout our portal: http://tabula-sapiens.ds.czbiohub.org/
