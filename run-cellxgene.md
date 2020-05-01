@@ -1,6 +1,7 @@
 # cellxgene
 
 ## install dependencies
+(pip)pip3 install scanpy --upgrade
 (pip)pip3 install anndata --upgrade
 
 ## install
