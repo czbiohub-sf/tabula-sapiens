@@ -114,3 +114,8 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .pnp.*
+
+#package-lock
+package-lock.json
+
+.babelrc
