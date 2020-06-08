@@ -1,0 +1,94 @@
+@mixin font-header {
+  font-size: var(--font-size-header-xl);
+  line-height: var(--line-height-header-xl);
+  font-family: var(--font-family-header);
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+@mixin font-body {
+  font-size: var(--font-size-body-s);
+  line-height: var(--line-height-body-s);
+  font-family: var(--font-family-body);
+  letter-spacing: 0.4px;
+}
+
+// Font style for the banner text.
+@mixin font-body-banner {
+  font-size: var(--font-size-body-m);
+  // Give a little extra line-height for the banner text.
+  line-height: var(--line-height-body-l);
+  font-family: var(--font-family-body);
+  letter-spacing: 0.4px;
+  // Make the text more thin.
+  font-weight: 300;
+}
+
+@mixin font-header-l {
+  font-size: var(--font-size-header-l);
+  line-height: var(--line-height-header-l);
+  font-family: var(--font-family-header);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+@mixin font-body-bold {
+  font-size: var(--font-size-body-s);
+  line-height: var(--line-height-body-s);
+  font-family: var(--font-family-body);
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+@mixin font-covid-testing-button {
+  font-size: var(--font-size-body-s);
+  line-height: var(--line-height-body-s);
+  font-family: var(--font-family-body);
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+@mixin font-covid-testing-header {
+  font-size: var(--font-size-body-l);
+  line-height: var(--line-height-body-l);
+  font-family: var(--font-family-body);
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+@mixin font-protocol-box-long {
+  font-size: var(--font-size-body-m);
+  line-height: var(--line-height-body-m);
+  font-family: Roboto;
+  font-weight: 300;
+  letter-spacing: 0.4px;
+  line-height: 22px;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+}
+
+@mixin font-protocol-box-short {
+  font-size: var(--font-size-body-xl);
+  line-height: var(--line-height-body-xl);
+  font-family: Butler;
+  font-weight: 500;
+  font-size: 44px;
+  letter-spacing: 0.3px;
+  line-height: 58px;
+  text-transform: uppercase;
+  color: var(--gray-dark);
+}
+
+@mixin font-splash-butler {
+  font-family: Butler-UltraLight;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 54px;
+  line-height: 58px;
+  letter-spacing: 0.3px;
+}
+
+@mixin box-shadow {
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.22);
+}
