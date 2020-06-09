@@ -55,3 +55,37 @@
 .content-2ms4P {
   padding: 20px 70px 70px;
 }
+.heading-2FlZ4 {
+  font-size: var(--font-size-header-l);
+  line-height: var(--line-height-header-l);
+  font-family: var(--font-family-header);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-top: 60px;
+  color: #455156;
+}
+.container-26Pix {
+  direction: row;
+  display: flex;
+  align-items: start;
+  padding: 20px;
+  object-fit: contain;
+}
+.container-26Pix .biohub-Mszfu {
+  width: 95%;
+  padding-top: 15px;
+}
+.container-26Pix .ucsf-2upQY {
+  width: 70%;
+  margin: 0 0 20px 40px;
+}
+.container-26Pix .berkeley-26h22 {
+  width: 90%;
+  margin: 0 30px 20px 0;
+  padding-top: 10px;
+}
+.container-26Pix .stanford-fRlCB {
+  width: 85%;
+  margin: 0 30px 20px 20px;
+  padding-top: 25px;
+}

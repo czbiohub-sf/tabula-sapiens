@@ -1,0 +1,9 @@
+@import "~styles/mixins.scss";
+
+.heading {
+  @include font-header-l;
+  margin-top: 60px;
+
+  /* $bluegray-dark */
+  color: #455156;
+}
