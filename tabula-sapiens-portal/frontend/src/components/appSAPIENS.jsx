@@ -5,6 +5,7 @@ import { BiohubUI, Banner, NavBar, Link as CZUILink } from "cz-ui";
 
 import AboutSapiens from "./tabula-sapiens-pages/About.jsx";
 import SapiensWorkflows from "./tabula-sapiens-pages/Workflows.jsx";
+import CellProfiles from "./tabula-sapiens-pages/CellProfiles.jsx";
 
 class AppSAPIENS extends Component {
   constructor(props) {
@@ -81,9 +82,13 @@ class AppSAPIENS extends Component {
               <Route path="/workflows">
                 <SapiensWorkflows />
               </Route>
-              <Route path="/annotation">WIP</Route>
+              <Route path="/annotation">
+                <img src={"../../images/annotations.png"} />
+              </Route>
               <Route path="/tissues">WIP</Route>
-              <Route path="/cells">WIP</Route>
+              <Route path="/cells">
+                <CellProfiles />
+              </Route>
               <Route path="/immune">
                 <img src={"../../images/immune.png"} width="1600" />
               </Route>

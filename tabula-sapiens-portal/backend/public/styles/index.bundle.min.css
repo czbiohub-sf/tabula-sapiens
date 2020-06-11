@@ -89,3 +89,22 @@
   margin: 0 30px 20px 20px;
   padding-top: 25px;
 }
+.heading-2DsZ2 {
+  margin: 30px;
+}
+.selectorsPane-2dFub {
+  width: 1000px;
+  margin: 30px;
+  display: flex;
+}
+.selectorsPane-2dFub .search-2KTjU {
+  flex: 1 1 auto;
+}
+.selectorsPane-2dFub .select-2z5NU {
+  flex: 0 0 auto;
+  margin-left: 10px;
+}
+.dataPane-oRALX {
+  margin: 30px;
+  width: 1000px;
+}
