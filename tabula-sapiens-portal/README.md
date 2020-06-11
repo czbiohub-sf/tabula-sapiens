@@ -1,4 +1,4 @@
-# tabula sapiens portal
+# tabula-hub
 
 # Getting setup for development
 
