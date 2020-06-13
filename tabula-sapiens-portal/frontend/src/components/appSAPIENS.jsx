@@ -65,12 +65,19 @@ class AppSAPIENS extends Component {
                 >
                   CELL PROFILES
                 </CZUILink>,
+                // <CZUILink
+                //   component={Link}
+                //   to="/immune"
+                //   onClick={() => this.setState({ selectedIndex: 6 })}
+                // >
+                //   IMMUNE COMPARTMENT
+                // </CZUILink>,
                 <CZUILink
                   component={Link}
-                  to="/immune"
-                  onClick={() => this.setState({ selectedIndex: 6 })}
+                  to="/splicing"
+                  onClick={() => this.setState({ selectedIndex: 7 })}
                 >
-                  IMMUNE COMPARTMENT
+                  SPLICING
                 </CZUILink>,
               ]}
               navSelectedLinkIndex={this.state.selectedIndex}
@@ -83,22 +90,25 @@ class AppSAPIENS extends Component {
                 <SapiensWorkflows />
               </Route>
               <Route path="/annotation">
-                <img src={"../../images/annotations.png"} />
+                <img src={"../../images/annotations.png"} width="1600" />
               </Route>
-              <Route path="/tissues">WIP</Route>
+              <Route path="/tissues">
+                <img src={"../../images/tissueprofile.png"} width="1600" />
+              </Route>
               <Route path="/cells">
                 <CellProfiles />
               </Route>
-              <Route path="/immune">
+              {/* <Route path="/immune">
                 <img src={"../../images/immune.png"} width="1600" />
-              </Route>
+              </Route> */}
+              <Route path="/splicing">WIP</Route>
               <Route path="/home">
                 <Banner
                   backgroundUrl={"../../images/sapiens_logo.png"}
                   mainText="Tabula Sapiens"
                   paragraph="Welcome to the most exciting Tabula so far!"
                 />
-                <img src={"../../images/dashboard.png"} />
+                <img src={"../../images/dashboard.png"} width="1600" />
               </Route>
             </Switch>
           </div>

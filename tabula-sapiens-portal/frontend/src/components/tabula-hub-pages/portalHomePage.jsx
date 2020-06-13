@@ -21,7 +21,7 @@ class HomePage extends Component {
             title="Tabula Sapiens"
             description="First-draft human cell atlas of two million cells from 25 organs of eight normal human subjects"
             buttonTitle="View the Project"
-            buttonLink="/sapiens"
+            buttonLink="/sapiens/home"
             image={"../../images/sapiens_logo.png"}
           />
         </div>

@@ -40,7 +40,7 @@ class App extends Component {
                 <NavBarPortal />
                 <Publications />
               </Route>
-              <Route path="/sapiens">
+              <Route path="/sapiens/">
                 <SapiensHomePage />
               </Route>
               <Route path="/">
