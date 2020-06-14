@@ -1,0 +1,278 @@
+---
+title: "hPB_analysis"
+author: "aopisco"
+date: "6/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library("dplyr")
+library("ggplot2")
+library("DESeq2")
+library("tidyverse")
+
+```
+
+
+```{r data load}
+countData <- read.csv(file = "./hPB_gene_count_table_with_gene_symbols.csv",row.names = 1)
+countData<-countData[,1:42]
+
+metadata <- read.csv("./hPB_complete_metadata.csv",row.names = 1)
+
+dds <- DESeqDataSetFromMatrix(countData = countData,
+                              colData = metadata,
+                              design= ~Abbreviation)
+
+
+```
+
+```{r filter genes}
+
+nrow(dds)
+keep <- rowSums(counts(dds)) > 1
+dds <- dds[keep,]
+nrow(dds)
+
+```
+
+```{r variance stabilizing transformation and rlog}
+
+lambda <- 10^seq(from = -1, to = 2, length = 1000)
+cts <- matrix(rpois(1000*100, lambda), ncol = 100)
+library("vsn")
+meanSdPlot(cts, ranks = FALSE)
+
+# And for logarithm-transformed counts:
+
+log.cts.one <- log2(cts + 1)
+meanSdPlot(log.cts.one, ranks = FALSE)
+
+vsd <- vst(dds, blind = FALSE)
+head(assay(vsd), 3)
+
+rld <- rlog(dds, blind = FALSE)
+head(assay(rld), 3)
+
+```
+
+
+```{r}
+
+dds <- estimateSizeFactors(dds)
+
+df <- bind_rows(
+  as_data_frame(log2(counts(dds, normalized=TRUE)[, 1:2]+1)) %>%
+         mutate(transformation = "log2(x + 1)"),
+  as_data_frame(assay(vsd)[, 1:2]) %>% mutate(transformation = "vst"),
+  as_data_frame(assay(rld)[, 1:2]) %>% mutate(transformation = "rlog"))
+  
+colnames(df)[1:2] <- c("x", "y")  
+
+ggplot(df, aes(x = x, y = y)) + geom_hex(bins = 80) +
+  coord_fixed() + facet_grid( . ~ transformation)  
+
+```
+
+```{r heatmaps}
+
+sampleDists <- dist(t(assay(vsd)))
+sampleDists
+
+library("pheatmap")
+library("RColorBrewer")
+
+sampleDistMatrix <- as.matrix( sampleDists )
+rownames(sampleDistMatrix) <- paste( vsd$Abbreviation, sep = " - " )
+colnames(sampleDistMatrix) <- NULL
+colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
+pheatmap(sampleDistMatrix,
+         clustering_distance_rows = sampleDists,
+         clustering_distance_cols = sampleDists,
+         col = colors)
+
+library("PoiClaClu")
+poisd <- PoissonDistance(t(counts(dds)))
+
+samplePoisDistMatrix <- as.matrix( poisd$dd )
+rownames(samplePoisDistMatrix) <- paste( dds$Abbreviation, sep=" - " )
+colnames(samplePoisDistMatrix) <- NULL
+pheatmap(samplePoisDistMatrix,
+         clustering_distance_rows = poisd$dd,
+         clustering_distance_cols = poisd$dd,
+         col = colors)
+
+```
+
+
+
+```{r pca}
+
+plotPCA(vsd, intgroup = "Abbreviation")
+
+pcaData <- plotPCA(vsd, intgroup = c( "Abbreviation"), returnData = TRUE)
+pcaData
+
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+ggplot(pcaData, aes(x = PC1, y = PC2, color = Abbreviation)) +
+  geom_point(size =3) +
+  xlab(paste0("PC1: ", percentVar[1], "% variance")) +
+  ylab(paste0("PC2: ", percentVar[2], "% variance")) +
+  coord_fixed() +
+  ggtitle("PCA with VST data")
+
+```
+
+
+```{r}
+
+library("glmpca")
+gpca <- glmpca(counts(dds), L=2)
+gpca.dat <- gpca$factors
+gpca.dat$id <- dds$id
+gpca.dat$virus <- dds$virus
+
+ggplot(gpca.dat, aes(x = dim1, y = dim2, color = id, shape = virus)) +
+  geom_point(size =3) + coord_fixed() + ggtitle("glmpca - Generalized PCA")
+
+```
+
+
+```{r}
+mds <- as.data.frame(colData(vsd))  %>%
+         cbind(cmdscale(sampleDistMatrix))
+ggplot(mds, aes(x = `1`, y = `2`, color = Abbreviation)) +
+  geom_point(size = 3) + coord_fixed() + ggtitle("MDS with VST data")
+
+
+mdsPois <- as.data.frame(colData(dds)) %>%
+   cbind(cmdscale(samplePoisDistMatrix))
+ggplot(mdsPois, aes(x = `1`, y = `2`, color = Abbreviation)) +
+  geom_point(size = 3) + coord_fixed() + ggtitle("MDS with PoissonDistances")
+
+```
+
+```{r mds plot}
+mds <- as.data.frame(colData(vsd))  %>%
+         cbind(cmdscale(sampleDistMatrix))
+ggplot(mds, aes(x = `1`, y = `2`, color = Abbreviation)) +
+  geom_point(size = 3) + coord_fixed() + ggtitle("MDS with VST data")
+
+
+```
+
+```{r}
+mdsPois <- as.data.frame(colData(dds)) %>%
+   cbind(cmdscale(samplePoisDistMatrix))
+ggplot(mdsPois, aes(x = `1`, y = `2`, color = Abbreviation)) +
+  geom_point(size = 3) + coord_fixed() + ggtitle("MDS with PoissonDistances")
+
+```
+
+
+```{r convert ids}
+# this block requires internet connection
+library('biomaRt')
+mart = useMart("ensembl")
+mart = useDataset("hsapiens_gene_ensembl", mart)
+
+genes <- row.names(dds)
+fixed_names = sapply(strsplit(genes, ".", fixed=T), function(x) x[1])
+
+# this takes 10-15min
+G_list <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id","hgnc_symbol", "description"),values=fixed_names,mart= mart)
+
+
+
+genes <- as.data.frame(row.names(dds))
+colnames(genes) <- 'ensembl_gene'
+genes$ensembl_gene_id <-fixed_names
+library(plyr)
+genes <- join(genes,G_list,by = "ensembl_gene_id", type = "full")
+genes <-join(x = genes, 
+              y = G_list,
+              by.x="ensembl_gene_id_trimmed",
+              by.y="ensembl_gene_id", 
+              all.x=TRUE,
+              all.y=FALSE)
+genes <- genes[!duplicated(genes$ensembl_gene),]
+
+mcols(dds) <- genes
+mcols(dds)
+```
+
+```{r Differential expression analysis}
+dds <- DESeq(dds)
+res <- results(dds)
+res
+
+ddsMF <- dds
+levels(ddsMF$Abbreviation)
+design(ddsMF) <- formula(~ 0+Abbreviation)
+ddsMF <- DESeq(ddsMF)
+resMF <- results(ddsMF,
+                 contrast = c("genotype","ZCCHC14","WT"))
+head(resMF)
+
+resSig <- subset(resMF, padj < 0.1)
+head(resSig[ order(resSig$log2FoldChange), ])
+
+dds$group <- factor(paste0(dds$Abbreviation))
+design(dds) <- ~ group
+levels(dds$group)
+dds <- DESeq(dds)
+resultsNames(dds)
+res <- results(dds, contrast=c("group", "WTHAV", "WTUI"))
+resSig <- subset(res, padj < 0.1)
+
+head(resSig[ order(resSig$log2FoldChange), ])
+
+```
+
+```{r}
+library(DESeq2)
+library(DEGreport)
+
+# The full model was specified previously with the `design = ~ sampletype`:
+# dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
+
+# Likelihood ratio test
+dds_lrt <- DESeq(dds, test="LRT", reduced = ~ 1)
+
+res_LRT <- results(dds_lrt)
+
+# Subset the LRT results to return genes with padj < 0.05
+padj.cutoff=.05
+sig_res_LRT <- res_LRT %>%
+               data.frame() %>%
+               rownames_to_column(var="gene") %>% 
+               as_tibble() %>% 
+               filter(padj < padj.cutoff)
+ 
+# Get sig gene lists
+sigLRT_genes <- sig_res_LRT %>% 
+                pull(gene)
+```
+
+```{r}
+
+library("genefilter")
+topVarGenes <- head(order(rowVars(assay(vsd)), decreasing = TRUE), 20)
+
+mat  <- assay(vsd)[ topVarGenes, ]
+mat  <- mat - rowMeans(mat)
+anno <- as.data.frame(colData(vsd)[, c("genotype","condition")])
+pheatmap(mat, annotation_col = anno)
+
+dds
+```
+
+```{r}
+
+
+
+```
