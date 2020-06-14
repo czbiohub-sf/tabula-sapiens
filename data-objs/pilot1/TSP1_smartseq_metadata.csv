@@ -1,0 +1,28 @@
+CellID,cDNAPlate,LibraryPlateID,Tissue,PrimarySort,AnatomicalPosition,SortOrder,Wells,Excluded,SortDirection,Investigator,Barcode,cDNA Prep,cDNA Dilute,library prep,lib prep date,bead cleanup,BA nM,NovaSeqRun,Additional Notes
+,B107813,B107813Blue,Lung,Epithelial,Proximal,Plate 1,A1-P12,Col24,Column,Krasnow,BC8,Bob,Roja,Bob,6/6/19,Sheela,20.2,TSPSS1Run1,
+,B107813,B107813Blue,Lung,Endothelial,Proximal,Plate 1,A13-P23,Col24,Column,Krasnow,BC8,Bob,,Bob,6/6/19,,20.2,TSPSS1Run1,
+,B107810,B107810Blue,Lung,Immune,Proximal,Plate 2,A1-P12,Col24,Column,Krasnow,BC6,Bob,,Roja,6/6/19,Roja,11.8,TSPSS1Run1,
+,B107810,B107810Blue,Lung,Stromal,Proximal,Plate 2,A13-P23,Col24,Column,Krasnow,BC8,Bob,,Roja,6/6/19,,11.8,TSPSS1Run1,
+,B107809,B107809Blue,Lung,Epithelial,MedialDistal ,Plate 3,A1-P12,Col24,Column,Krasnow,BC5,Bob,Roja,Roja,6/6/19,Roja,12.6,TSPSS1Run1,
+,B107809,B107809Blue,Lung,Endothelial,MedialDistal ,Plate 3,A13-P23,Col24,Column,Krasnow,BC5,Bob,,Roja,6/6/19,,12.6,TSPSS1Run1,
+,B107811,B107811Blue,Lung,Immune,MedialDistal ,Plate 4,A1-P12,Col24,Column,Krasnow,BC7,Bob,,Roja,6/6/19,Roja,14.9,TSPSS1Run1,
+,B107811,B107811Blue,Lung,Stromal,MedialDistal ,Plate 4,A13-P23,Col24,Column,Krasnow,BC7,Bob,,Roja,6/6/19,,14.9,TSPSS1Run1,
+,B107925,B107925Blue,Blood,LymphocytesNeutrophils,,Plate 1,A1-P23,Col24,Row,Krasnow,BC9,Roja,,Bob,6/6/19,Sheela,20.5,TSPSS1Run1,
+,B107926,B107926Blue,Blood,LymphocytesNeutrophils,,Plate 2,A1-P23,Col24,Row,Krasnow,BC9,Roja,,Bob,6/6/19,Sheela,17,NovaRun36,
+,B107827,B107827Blue,PancreasEndocrine,Islet ,,Plate 1,A1-I6,Col24,Row,Kim,BC10,Bob,Roja,Bob/Roja,6/12/19,,13.2,TSPSS1Run1,12 special cells; A24-L24
+,B107829,B107829Blue,PancreasEndocrine,EndothelialStromal,,Plate 2,A1-P23,Col24,Row,Kim,BC13,Bob,Roja,Bob/Carly,,,6.2,TSPSS1Run1,
+,B107919,B107919Blue,PancreasEndocrine,Immune,,Plate 3,A1-P23,Col24,Row,Kim,BC11,Bob,Roja,Bob/Carly,,,26.3,TSPSS1Run1,
+,B107920,B107920Blue,PancreasEndocrine,AcinarDuct ,,Plate 4,A1-P23,Col24,Row,Kim,BC12,Bob,,Bob/Carly,,,15.4,TSPSS1Run1,
+,B107816,B107816Blue,PancreasExocrine,Epithelial,,Plate 1,A1-P23,Col24,Row,Artandi,BC4,Bob,Roja,Roja/Bob,6/6/19,Roja,8.5,NovaRun36,Short Dissociation Time
+,B107817,B107817BlueOldTn5,PancreasExocrine,Epithelial,,Plate 2,A1-P23,Col24,Row,Artandi,BC3,Bob,Roja,Roja/Bob,6/5/19,Roja,11.6,,Short Dissociation Time
+,B107817,B107817BlueNewTn5,PancreasExocrine,Epithelial,,Plate 2,A1-P23,Col24,Row,Artandi,BC3,Bob,,Roja/Bob,6/5/19,Roja,15.8,TSPSS1Run1,Short Dissociation Time and Test new aliquot Tn5
+,B107819,B107819Blue,PancreasExocrine,Epithelial,,Plate 3,A1-P23,Col24,Row,Artandi,BC1,Bob,Roja,Roja/Bob,6/5/19,Roja,24.5,TSPSS1Run1,Long Dissociation Time
+,B107820,B107820Blue,PancreasExocrine,Epithelial,,Plate 4,A1-P23,Col24,Row,Artandi,BC2,Bob,Roja,Roja/Bob,6/5/19,Roja,14.8,TSPSS1Run1,Long Dissociation Time
+,B107826,B107826Blue,Bladder,Epithelial,,Plate 1,A1-P23,Col24,Row,Beachy,BC20,Bob,Roja,Bob,6/13/19,Sheela,10.7,TSPSS1Run1,"failed library prep, redo"
+,B107825,B107825Blue,Bladder,Immune,,Plate 2,A1-P23,Col24,Row,Beachy,BC19,Bob,Roja,Bob,6/13/19,Sheela,10.9,TSPSS1Run1,"failed library prep, redo"
+,B107822,B107822Blue,Bladder,Stromal,,Plate 3,A1-P23,Col24,Row,Beachy,BC18,Bob,Roja,Bob,6/13/19,Sheela,12.5,TSPSS1Run1,"failed library prep, redo"
+,B107821,B107821Blue,Bladder,Endothelial,,Plate 4,A1-P23,Col24,Row,Beachy,BC17,Bob,Roja,Bob,6/13/19,Sheela,14.1,TSPSS1Run1,"failed library prep, redo"
+,B107830,B107830Blue,Muscle,Endothelial,,Plate 1,A1-P23,Col24,Row,Rando,BC4,Bob,,Bob,6/6/19,Sheela,19.3,TSPSS1Run1,
+,B107924,B107924Blue,Muscle,Thy1+,,Plate 2,A1-P23,Col24,Row,Rando,BC16,Bob,Roja,Bob/Carly,6/12/19,,28.9,TSPSS1Run1,"failed library prep, redo; redo from norm cDNA; 11 special cells; A24-K24"
+,B107921,B107921Blue,Muscle,Epithelial,,Plate 3,A1-P23,Col24,Row,Rando,BC15,Bob,Roja,Bob/Carly,6/11/19,,25,TSPSS1Run1,
+,B107909,B107909Blue,Muscle,Immune,,Plate 4,A1-P23,Col24,Row,Rando,BC14,Bob,Roja,Bob/Carly,6/11/19,,24.4,TSPSS1Run1,
