@@ -27,7 +27,7 @@ def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=150,
         use_cuda=use_cuda,
         frequency=5,
         data_loader_kwargs={"pin_memory": False},
-        n_iter_kl_warmup = 1600
+        n_epochs_kl_warmup = 50
     )
 
     torch.manual_seed(seed)
