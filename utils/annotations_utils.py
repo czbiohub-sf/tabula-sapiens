@@ -5,7 +5,7 @@ import torch
 import matplotlib
 warnings.filterwarnings('ignore')
 
-sys.path.append('/data/yosef2/users/chenling/scVI/')
+sys.path.append('/home/angela/src/scVI_TSP/')
 from scvi.inference import UnsupervisedTrainer, AlternateSemiSupervisedTrainer, SemiSupervisedTrainer
 from scvi.models import VAE, SCANVI
 import matplotlib.pyplot as plt
