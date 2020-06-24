@@ -16,7 +16,7 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
 
-def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=150,
+def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=50,
                        use_batches=True, use_cuda=True, lr=1e-3,
                        n_latent=30, n_layers=2):
     vae = VAE(data.nb_genes, n_batch=data.n_batches * use_batches,
@@ -28,7 +28,7 @@ def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=150,
         use_cuda=use_cuda,
         frequency=5,
         data_loader_kwargs={"pin_memory": False},
-        n_epochs_kl_warmup = 50
+        n_epochs_kl_warmup = 10
     )
 
     torch.manual_seed(seed)
