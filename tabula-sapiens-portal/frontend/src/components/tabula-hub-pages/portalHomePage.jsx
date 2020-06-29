@@ -45,16 +45,14 @@ class HomePage extends Component {
             buttonTitle="View The Project"
             buttonLink=""
             target="_blank"
-            image={"../../images/lemur_logo.png"}
+            image={"../../images/mouse-lemur.jpg"}
           />
         </div>
         <div className={cs.content}>
           <Heading title="Tabula Rhinolophidae" />
           <InfoBox
             title="Tabula Rhinolophidae"
-            description="The COVID-19 Bay Area Serology Testing Consortium is dedicated to 
-           developing serological assays and rapid dissemination 
-           of knowledge derived from testing and validation."
+            description=""
             buttonTitle="View The Project"
             buttonLink=""
             target="_blank"
