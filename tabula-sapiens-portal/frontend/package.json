@@ -38,6 +38,7 @@
     "hub-ui": "github:czbiohub/hub-ui#master",
     "humanize-duration": "^3.22.0",
     "lodash": "^4.17.15",
+    "material-ui-dropzone": "^3.3.0",
     "material-ui-icons": "^1.0.0-beta.36",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
