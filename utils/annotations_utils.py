@@ -5,8 +5,10 @@ import torch
 import matplotlib
 warnings.filterwarnings('ignore')
 
-sys.path.append('/home/angela/src/scVI_TSP/')
+sys.path.append('/data/yosef2/users/chenling/scVI/')
 from scvi.inference import UnsupervisedTrainer, AlternateSemiSupervisedTrainer, SemiSupervisedTrainer
+from scvi.dataset import AnnDatasetFromAnnData
+
 from scvi.models import VAE, SCANVI
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,11 +18,25 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
 
+def scVIdata_preprocess(combined, batch_col='Tissue Tech', label_col='scANVI Prediction By Organ'):
+    tissue_tech_list = list(np.unique(combined.obs[batch_col]))
+    batch_id = [tissue_tech_list.index(x) for x in combined.obs[batch_col]]
+    combined.obs['batch'] = batch_id
+
+    train_data = AnnDatasetFromAnnData(combined, batch_label='batch')
+    labels = combined.obs[label_col]
+    train_data.cell_types, train_data.labels = np.unique(labels, return_inverse=True)
+    train_data.labels = train_data.labels.reshape(len(train_data.labels), 1)
+    train_data.n_labels = len(train_data.cell_types)
+
+    return train_data
+
 def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=50,
-                       use_batches=True, use_cuda=True, lr=1e-3,
-                       n_latent=30, n_layers=2):
+                       n_epochs_kl_warmup=10,
+                       use_batches=True, use_cuda=True, lr=1e-4,
+                       n_latent=50, n_layers=3):
     vae = VAE(data.nb_genes, n_batch=data.n_batches * use_batches,
-              n_layers=n_layers, n_latent=n_latent, dispersion='gene')
+              n_layers=n_layers, n_latent=n_latent, dispersion='gene-batch')
     trainer = UnsupervisedTrainer(
         vae,
         data,
@@ -28,7 +44,7 @@ def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=50,
         use_cuda=use_cuda,
         frequency=5,
         data_loader_kwargs={"pin_memory": False},
-        n_epochs_kl_warmup = 10
+        n_epochs_kl_warmup=n_epochs_kl_warmup
     )
 
     torch.manual_seed(seed)
@@ -70,7 +86,7 @@ def balance_n_labelled(l, labelled, nlabels=30):
 
 
 def scanvi_pred(data, modelfile, scanvi_modelfile, balance=True, alternate=False, nlabels=30,
-                retrain=False, n_epochs=15, forward_only=False):
+                retrain=False, n_epochs=15, forward_only=False,  n_layers=3, n_latent=50):
     if forward_only:
         print('Only predict based on pretrained model')
     else:
@@ -88,8 +104,8 @@ def scanvi_pred(data, modelfile, scanvi_modelfile, balance=True, alternate=False
         unlabelled = [x for x in np.arange(len(data.labels.ravel())) if x not in labelled]
         unlabelled = np.random.choice(unlabelled, len(unlabelled), replace=False)
 
-    scanvi = SCANVI(data.nb_genes, data.n_batches, data.n_labels, n_layers=2, n_latent=30,
-                    symmetric_kl=True)
+    scanvi = SCANVI(data.nb_genes, data.n_batches, data.n_labels, n_layers=n_layers, n_latent=n_latent,
+                    symmetric_kl=True, dispersion='gene-batch')
 
     if alternate is False:
         trainer_scanvi = SemiSupervisedTrainer(scanvi, data,
