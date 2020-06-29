@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+import { BiohubUI, Button, Link as CZUILink } from "cz-ui";
+
 export default class AnnotationsUpdate extends Component {
   constructor(props) {
     super(props);
