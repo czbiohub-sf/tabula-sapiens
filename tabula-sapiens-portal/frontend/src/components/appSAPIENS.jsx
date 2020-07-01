@@ -92,7 +92,7 @@ class AppSAPIENS extends Component {
               </Route>
               <Route path="/annotation">
                 <AnnotationsUpdate />
-                <img src={"../../images/annotations.png"} width="1600" />
+                {/* <img src={"../../images/annotations.png"} width="1600" /> */}
               </Route>
               <Route path="/tissues">
                 <img src={"../../images/tissueprofile.png"} width="1600" />

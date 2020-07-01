@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+
+import Heading from "./Heading.jsx";
+
 // import { BiohubUI, Button, Link as CZUILink } from "cz-ui";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
@@ -37,10 +43,10 @@ export default class AnnotationsUpdate extends Component {
   render() {
     return (
       <div>
-        <Heading title="About" />
+        <Heading title="How to reannotate the dataset" />
         <Container maxWidth="lg">
           <Box my={4}>
-            <Typography
+            {/* <Typography
               variant="h6"
               component="h3"
               gutterBottom
@@ -50,47 +56,53 @@ export default class AnnotationsUpdate extends Component {
               Layout very confusing
               <p />
               We are getting there
-            </Typography>
+            </Typography> */}
+
+            <div>
+              <img src={"../../images/annotations.png"} width="1000" />
+            </div>
           </Box>
         </Container>
 
         <Heading title="Upload annotations" />
 
-        <img src={"../../images/annotations.png"} width="1600" />
+        <Container maxWidth="lg">
+          <Box my={4}>
+            <div className="container">
+              <div className="row">
+                <form onSubmit={this.onSubmit}>
+                  <div className="form-group">
+                    {/* <input type="file" onChange={this.onFileChange} /> */}
 
-        <div className="container">
-          <div className="row">
-            <form onSubmit={this.onSubmit}>
-              <div className="form-group">
-                {/* <input type="file" onChange={this.onFileChange} /> */}
+                    <input
+                      ref={"file-upload"}
+                      type="file"
+                      onChange={this.onFileChange}
+                    />
+                    <Button
+                      onClick={(e) => {
+                        this.refs["file-upload"].click();
+                      }}
+                    ></Button>
+                  </div>
 
-                <input
-                  ref={"file-upload"}
-                  type="file"
-                  onChange={this.onFileChange}
-                />
-                <Button
-                  onClick={(e) => {
-                    this.refs["file-upload"].click();
-                  }}
-                ></Button>
-              </div>
-
-              <div className="form-group">
-                {/* <button className="btn btn-primary" type="submit">
+                  <div className="form-group">
+                    {/* <button className="btn btn-primary" type="submit">
                 Upload
               </button> */}
-                <Button
-                  variant="contained"
-                  color="default"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Upload
-                </Button>
+                    <Button
+                      variant="contained"
+                      color="default"
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload
+                    </Button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </div>
+            </div>
+          </Box>
+        </Container>
       </div>
     );
   }
