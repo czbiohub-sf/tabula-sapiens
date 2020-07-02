@@ -31,7 +31,7 @@ RUN pip install  -r ./requirements.txt
 RUN pip freeze  # Copy this to requirements-freeze.txt if there are changes.
 
 COPY . .
-CMD [ "python", "processing.py", \
+CMD [ "python", "alignment.py", \
       "--input", "/input", \
       "--output", "/output.h5ad" ]
 
