@@ -11,21 +11,6 @@ def well_range(c1,n1,c2,n2):
         ]
     return well_order_by_columns
 
-# convert ensembl to gene symbol
-def convert_ensembl_symbol(adata,species='human',idcol = 'ensembls'):
-    import mygene
-    mg = mygene.MyGeneInfo()
-
-    mygene_converter = mg.querymany(list(adata.var[idcol]),scopes='all', species=species, as_dataframe=True)
-    mygene_converter.loc[mygene_converter['notfound']==True,'symbol'] = mygene_converter.loc[mygene_converter['notfound']==True].index
-
-    adata.var = adata.var.merge(
-        mygene_converter.reset_index(),left_on='ensembls',right_on='query').sort_values(
-        by='_score',ascending=False).drop_duplicates(
-        'ensembl_id').set_index('symbol')
-    
-    return adata
-
 # transform all categorical columns into strings
 def remove_cats(adata):
 
@@ -87,3 +72,12 @@ def downsample_to_smallest_category(
         "The original counts where {}".format(column, min_size, dict(counts))
     )
     return adata[sample_selection].copy()
+
+# remove duplicated barcodes from 10X
+def FindUniqueCells(tenx): 
+    barcodes = tenx.obs.index
+    barcodes = [x.split('-')[0] for x in barcodes]
+
+    unique_barcodes, count = np.unique(barcodes, return_counts=True)
+    is_unique = [x in unique_barcodes[count==1] for x in barcodes]
+    return(is_unique)
