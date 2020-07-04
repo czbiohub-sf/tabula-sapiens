@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 
 # create a color dictionary for tissues
-def tissue_color_dict():
+def tissue_colors():
     
-    color_dict = {'Bladder': '#e7969c',
+    tissue_color_dict = {'Bladder': '#e7969c',
              'Blood': '#d6616b',
              'Bone_Marrow': '#cedb9c',
-             'Fat': '#e7cb94',
-             'Heart': '#637939',
+#              'Fat': '#e7cb94',
+#              'Heart': '#637939',
              'Kidney': '#7b4173',
              'Large_Intestine': '#31a354',
              'Lung': '#3182bd',
@@ -21,11 +21,11 @@ def tissue_color_dict():
              'Trachea': '#969696',
              'Vasculature': '#843c39'}
     
-    return color_dict
+    return tissue_color_dict
 
 
 # create a color dictionary for donors
-def donor_color_dict():
+def donor_colors():
     donors = ['TSP1','TSP2']
     
     import matplotlib.colors as pltcolors
@@ -41,8 +41,25 @@ def donor_color_dict():
     return donor_color_dict
 
 
+# create a color dictionary for donors
+def compartment_colors():
+    compartments = ['Endothelial', 'Epithelial', 'Immune', 'Stromal']
+    
+    import matplotlib.colors as pltcolors
+    
+    cmap = plt.cm.get_cmap("YlOrRd")
+        
+    compartment_color_dict = {}
+    j=1/len(compartments)
+    for c in compartments:
+        compartment_color_dict[c] = pltcolors.to_hex(cmap(j))
+        j+=1/len(compartments)
+        
+    return compartment_color_dict
+
+
 # create a color dictionary for methods
-def method_color_dict():
+def method_colors():
     methods = ['10X','smartseq2']
     
     import matplotlib.colors as pltcolors

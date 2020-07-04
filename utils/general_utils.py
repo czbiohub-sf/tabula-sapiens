@@ -1,3 +1,4 @@
+import scanpy as sc
 # create a list of letters
 def char_range(c1, c2):
     """Generates the characters from `c1` to `c2`, inclusive."""
