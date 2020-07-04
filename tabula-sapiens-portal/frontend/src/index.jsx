@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/appTabulaHUB.jsx";
+import AppSAPIENS from "./components/appSAPIENS.jsx";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <BrowserRouter>
-    <App />
+    <AppSAPIENS />
   </BrowserRouter>,
 
   document.getElementById("root")

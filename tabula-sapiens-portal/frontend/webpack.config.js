@@ -30,6 +30,9 @@ module.exports = {
           loader: "babel-loader",
         },
       },
+
+      { test: /\.html$/, loader: "html-loader" },
+
       {
         test: /\.csv$/,
         loader: "csv-loader",

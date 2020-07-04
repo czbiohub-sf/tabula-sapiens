@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
-import { BiohubUI, Banner, NavBar, Link as CZUILink } from "cz-ui";
+import { BiohubUI, Banner, NavBar, Link as CZUILink, Footer } from "cz-ui";
 
 import AboutSapiens from "./tabula-sapiens-pages/About.jsx";
 import SapiensWorkflows from "./tabula-sapiens-pages/Workflows.jsx";
 import CellProfiles from "./tabula-sapiens-pages/CellProfiles.jsx";
 import AnnotationsUpdate from "./tabula-sapiens-pages/Annotation.jsx";
+import MySankeyComponent from "./tabula-sapiens-pages/CellTypes.jsx";
 
 class AppSAPIENS extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class AppSAPIENS extends Component {
   render() {
     return (
       <BiohubUI>
-        <Router basename="/sapiens">
+        <Router basename="/">
           <div>
             <NavBar
               accent
@@ -47,10 +48,17 @@ class AppSAPIENS extends Component {
                 </CZUILink>,
                 <CZUILink
                   component={Link}
+                  to="/celltypes"
+                  onClick={() => this.setState({ selectedIndex: 3 })}
+                >
+                  CELL TYPES
+                </CZUILink>,
+                <CZUILink
+                  component={Link}
                   to="/annotation"
                   onClick={() => this.setState({ selectedIndex: 3 })}
                 >
-                  CELL TYPE ANNOTATION
+                  CONTRIBUTE
                 </CZUILink>,
                 <CZUILink
                   component={Link}
@@ -104,7 +112,10 @@ class AppSAPIENS extends Component {
                 <img src={"../../images/immune.png"} width="1600" />
               </Route> */}
               <Route path="/splicing">WIP</Route>
-              <Route path="/home">
+              <Route path="/celltypes">
+                <MySankeyComponent />
+              </Route>
+              <Route path="/">
                 <Banner
                   backgroundUrl={"../../images/sapiens_logo.png"}
                   mainText="Tabula Sapiens"
@@ -113,6 +124,7 @@ class AppSAPIENS extends Component {
                 <img src={"../../images/dashboard.png"} width="1600" />
               </Route>
             </Switch>
+            <Footer navLinks={[<CZUILink href="/">HOME</CZUILink>]} />
           </div>
         </Router>
       </BiohubUI>
