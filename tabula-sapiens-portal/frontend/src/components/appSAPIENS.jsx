@@ -7,7 +7,7 @@ import AboutSapiens from "./tabula-sapiens-pages/About.jsx";
 import SapiensWorkflows from "./tabula-sapiens-pages/Workflows.jsx";
 import CellProfiles from "./tabula-sapiens-pages/CellProfiles.jsx";
 import AnnotationsUpdate from "./tabula-sapiens-pages/Annotation.jsx";
-import MySankeyComponent from "./tabula-sapiens-pages/CellTypes.jsx";
+import CellTypesComponent from "./tabula-sapiens-pages/CellTypes.jsx";
 
 class AppSAPIENS extends Component {
   constructor(props) {
@@ -113,7 +113,7 @@ class AppSAPIENS extends Component {
               </Route> */}
               <Route path="/splicing">WIP</Route>
               <Route path="/celltypes">
-                <MySankeyComponent />
+                <CellTypesComponent />
               </Route>
               <Route path="/">
                 <Banner
