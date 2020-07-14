@@ -1,0 +1,7 @@
+scanpy==1.4.5.post2
+numpy==1.18.1
+ipython==7.11.1
+louvain==0.6.1
+leidenalg==0.7.0
+python-igraph==0.7.1.post6
+

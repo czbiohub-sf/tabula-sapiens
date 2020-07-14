@@ -34,9 +34,10 @@ def scVIdata_preprocess(combined, batch_col='Tissue Tech', label_col='scANVI Pre
 def get_scvi_posterior(data, model_file, retrain=False, seed=0, n_epochs=50,
                        n_epochs_kl_warmup=10,
                        use_batches=True, use_cuda=True, lr=1e-4,
-                       n_latent=50, n_layers=3):
+                       n_latent=50, n_layers=3, reconstruction_loss='zinb'):
     vae = VAE(data.nb_genes, n_batch=data.n_batches * use_batches,
-              n_layers=n_layers, n_latent=n_latent, dispersion='gene-batch')
+              n_layers=n_layers, n_latent=n_latent, dispersion='gene-batch',
+              reconstruction_loss = reconstruction_loss)
     trainer = UnsupervisedTrainer(
         vae,
         data,
