@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+# install.packages("ggpubr")
+library(ggpubr)
+
+
+sapiens.metadata <- read.csv("./sapiens_metadata_ballon_plot.csv", row.names=1, stringsAsFactors=FALSE)
+sapiens.metadata
+
+# set colors
+my_cols <- c('#e7969c', '#d6616b', '#cedb9c', '#e7cb94', '#637939', '#7b4173', '#31a354', '#3182bd', '#8c6d31', '#e7ba52', '#fd8d3c', '#ce6dbd', '#6baed6', '#393b79', '#9c9ede', '#969696', '#843c39')
+# exclude Fat & Heart
+my_cols <- c('#e7969c', '#d6616b', '#cedb9c', '#7b4173', '#31a354', '#3182bd', '#8c6d31', '#e7ba52', '#fd8d3c', '#ce6dbd', '#6baed6', '#393b79', '#9c9ede', '#969696', '#843c39')
+
+my_cols
+
+
+
+maca.facs.metadata
+q<-ggballoonplot(maca.facs.metadata, x = "donor", y = "trickR",
+ size = "cell_id", fill = "tissue",
+ facet.by = c("tissue","method"),
+ ggtheme = theme_bw()
+) + scale_x_discrete(limits=c('TSP1','TSP2'))+ #scale_fill_gradientn(colors = my_cols)
+ #  scale_y_discrete(limits=c('Vasculature',
+ # 'Trachea',
+ # 'Thymus',
+ # 'Spleen',
+ # 'Small_Intestine',
+ # 'Skin',
+ # 'Pancreas',
+ # 'Muscle',
+ # 'Lymph_Node',
+ # 'Lung',
+ # 'Large_Intestine',
+ # 'Kidney',
+ # 'Heart',
+ # 'Fat',
+ # 'Bone_Marrow',
+ # 'Blood',
+ # 'Bladder'))+
+  fill_palette(my_cols)#
+h = 4
+ggsave(plot = q, width = h, height = 2*h, dpi = 300, filename = "sapiens_metadata.pdf", useDingbats=FALSE)
+getwd()
+
+
+```
+
