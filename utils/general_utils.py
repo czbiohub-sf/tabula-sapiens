@@ -23,17 +23,16 @@ def remove_cats(adata):
 # balanced downsampling 
 import logging as logg
 def downsample_to_smallest_category(
-        adata,
-        column="sample_short",
-        random_state=None,
-        min_cells=15,
-        keep_small_categories=False
+        dataMatrix, 
+        classOfInterest = 'classification_group',
+        random_state = None,
+        min_cells = 15,
+        keep_small_categories = True
 ) -> sc.AnnData:
     """
-    returns an annData object in which all categories in 'column' have
+    returns an annData object in which all categories in 'classOfInterest' have
     the same size
-
-    column
+    classOfInterest
         column with the categories to downsample
     min_cells
         Minimum number of cells to downsample.
@@ -43,7 +42,8 @@ def downsample_to_smallest_category(
         Be default categories with less than min_cells are discarded.
         Set to true to keep them
     """
-    counts = adata.obs[column].value_counts(sort=False)
+
+    counts = dataMatrix.obs[classOfInterest].value_counts(sort=False)
     if len(counts[counts < min_cells]) > 0 and keep_small_categories is False:
         logg.warning(
             "The following categories have less than {} cells and will be "
@@ -54,13 +54,13 @@ def downsample_to_smallest_category(
     for sample, num_cells in counts.items():
         if num_cells <= min_cells:
             if keep_small_categories:
-                sel = adata.obs.index.isin(
-                    adata.obs[adata.obs[column] == sample].index)
+                sel = dataMatrix.obs.index.isin(
+                    dataMatrix.obs[dataMatrix.obs[classOfInterest] == sample].index)
             else:
                 continue
         else:
-            sel = adata.obs.index.isin(
-                adata.obs[adata.obs[column] == sample]
+            sel = dataMatrix.obs.index.isin(
+                dataMatrix.obs[dataMatrix.obs[classOfInterest] == sample]
                 .sample(min_size, random_state=random_state)
                 .index
             )
@@ -70,9 +70,9 @@ def downsample_to_smallest_category(
             sample_selection |= sel
     logg.info(
         "The cells in category {!r} had been down-sampled to have each {} cells. "
-        "The original counts where {}".format(column, min_size, dict(counts))
+        "The original counts where {}".format(classOfInterest, min_size, dict(counts))
     )
-    return adata[sample_selection].copy()
+    return dataMatrix[sample_selection].copy()
 
 # remove duplicated barcodes from 10X
 def FindUniqueCells(tenx): 
