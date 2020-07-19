@@ -31,7 +31,16 @@ RUN pip install  -r ./requirements.txt
 RUN pip freeze  # Copy this to requirements-freeze.txt if there are changes.
 
 COPY . .
-CMD [ "python", "onclass_annotations.py", \
+#CMD [ "python", "onclass_annotations.py", \
+#      "--input", "/input.h5ad", \
+#      "--output", "/output.h5ad", \
+#      "--data_file","/data_file.h5ad", \
+#      "--cell_type_network_file", "/cell_type_network_file.ontology", \
+#      "--use_pretrain_emb","/pretrain/tp2emb_500", \
+#      "--name_mapping_file", "/cl.obo", \
+#      "--use_pretrain_data", "/pretrain/BilinearNN_50019", \
+#      "--use_pretrain_data_expression", "/pretrain/BilinearNN_500"]
+CMD [ "python", "annotations.py", \
       "--input", "/input.h5ad", \
       "--output", "/output.h5ad", \
       "--data_file","/data_file.h5ad", \
@@ -40,3 +49,8 @@ CMD [ "python", "onclass_annotations.py", \
       "--name_mapping_file", "/cl.obo", \
       "--use_pretrain_data", "/pretrain/BilinearNN_50019", \
       "--use_pretrain_data_expression", "/pretrain/BilinearNN_500"]
+
+##### This is R install commands
+#install.packages("devtools")
+#devtools::install_github("pcahan1/singleCellNet")
+#library(singleCellNet)
