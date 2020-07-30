@@ -227,8 +227,9 @@ def main(
         train_X = data[train_idx,cgenes].X
         R_train_X = ro.r.matrix(train_X)
 
-        xpairs = singleCellNet.ptGetTop(R_train_X, cgenes2.rx2('grps'), ncores=1)
+        xpairs = singleCellNet.ptGetTop(R_train_X, cgenes2.rx2('grps'), cgenes2.rx2('cgenes_list'))
         pdTrain = singleCellNet.query_transform(R_train_X, xpairs)
+
         rf = singleCellNet.sc_makeClassifier(pdTrain.rx(xpairs,True), genes=xpairs, groups= cgenes2.rx2('grps'))
 
         test_X = data[test_idx,cgenes].X
