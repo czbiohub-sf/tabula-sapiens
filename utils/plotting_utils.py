@@ -1,4 +1,6 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # automcatically regenerate tissue cell fractions plots
 def tiss_cell_fractions(adata,
@@ -23,7 +25,7 @@ def tiss_cell_fractions(adata,
         ax.set_xticklabels(ax.get_xticklabels(),rotation=90);
         ax.set(xlabel= dataset +" "+ t +' cell types', ylabel='Relative abundance in 10X data');
         plt.tight_layout()
-        plt.savefig("./cell_fractions/"+save+"_"+t+'.pdf')
+        plt.savefig("./cell_fractions/"+dataset+"_"+t+'.pdf')
 
 
 # plot a sankey diagram using a pandas dataframe
