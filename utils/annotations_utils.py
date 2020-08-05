@@ -5,7 +5,6 @@ import torch
 import matplotlib
 warnings.filterwarnings('ignore')
 
-sys.path.append('/data/yosef2/users/chenling/scVI/')
 from scvi.inference import UnsupervisedTrainer, AlternateSemiSupervisedTrainer, SemiSupervisedTrainer
 from scvi.dataset import AnnDatasetFromAnnData
 
