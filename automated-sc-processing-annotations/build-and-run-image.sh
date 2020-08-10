@@ -5,7 +5,7 @@ set -o pipefail
 NAME=czbiohub/sc-rna-seq-processing:0.0.2
 
 # to create a new container
-docker build ./context_processing/ --tag $NAME
+docker build --tag $NAME .
 
 # push to dockerhub
 echo "if ready to push run 'docker push $NAME' "
