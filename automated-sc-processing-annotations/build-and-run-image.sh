@@ -2,7 +2,7 @@
 set -o errexit
 set -o pipefail
 
-NAME=czbiohub/sc-rna-seq-processing:0.0.2
+NAME=czbiohub/sc-rna-seq-processing
 
 # to create a new container
 docker build --tag $NAME .
@@ -11,11 +11,5 @@ docker build --tag $NAME .
 echo "if ready to push run 'docker push $NAME' "
 # docker push $NAME
 
-# run inside the container
-echo "previous file will be re-written"
-mkdir -p touch $PWD/data/output
-touch $PWD/data/output/output_processed.h5ad;
-docker run \
-  --mount type=bind,source=$PWD/data/adata_small_test.h5ad,target=/input \
-  --mount type=bind,source=$PWD/data/output/output_processed.h5ad,target=/output.h5ad \
-  $NAME
+#run the container
+docker run -p 8888:8888 -v $(pwd):/home/ $NAME 
