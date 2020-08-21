@@ -39,9 +39,11 @@ RUN apt-get -y install software-properties-common && \
 COPY environment.yml .
 #COPY tmp.yml environment.yml
 RUN conda env create -f environment.yml
+RUN R -e "install.packages('devtools')" &&\
+    R -e "library(devtools);  devtools::install_github('pcahan1/singlecellnet')"
 
 #SHELL ["conda", "run", "-n", "tabula_sapiens", "/bin/bash", "-c"]
-RUN R -e "install.packages('devtools'); library(devtools); devtools::install_github('pcahan1/singlecellnet')"
+#RUN R -e "install.packages('devtools'); library(devtools); devtools::install_github('pcahan1/singlecellnet')"
 
 #RUN /bin/bash -c "source activate tabula_sapiens &&  conda install r-base r-essentials r-devtools r-dplyr rpy2"
 
