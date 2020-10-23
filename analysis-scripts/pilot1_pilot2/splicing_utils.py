@@ -2,19 +2,55 @@
 import itertools
 from functools import partial
 import multiprocessing
+import sys
 import tempfile
 import time
 
 import numpy as np
 import pandas as pd
-from sourmash.logging import notify
+
+_quiet = False
+_debug = False
+def set_quiet(val, print_debug=False):
+    global _quiet, _debug
+    _quiet = bool(val)
+    _debug = bool(print_debug)
 
 
-def process_splicing(filename, gene='geneR1A_uniq', cell='cell', tissue=None):
+
+# Cribbed from https://github.com/dib-lab/sourmash/blob/c7ed8bef7de9b1581b9b067517f64ac64f31f9d0/sourmash/logging.py
+def notify(s, *args, **kwargs):
+    "A simple logging function => stderr."
+    if _quiet:
+        return
+
+    print(u'\r\033[K', end=u'', file=sys.stderr)
+    print(s.format(*args, **kwargs), file=sys.stderr,
+          end=kwargs.get('end', u'\n'))
+    if kwargs.get('flush'):
+        sys.stderr.flush()
+
+
+
+def process_splicing(filename, gene='geneR1A_uniq', cell='cell', tissue=None, method='10x'):
     splicing_df = pd.read_parquet(filename)
     
+    
+    # Add cell ids that match the h5ad object
+    if method == '10x':
+        # regex builder: https://regex101.com/r/rE1xfN/1
+        matches = splicing_df[cell].str.extractall('(?P<channel_cleaned>[\w-]+)_S\d+_L\d+_(?P<cell_barcode>[ACGT]+)')
+        matches = matches.droplevel(-1)
+        splicing_df = pd.concat([splicing_df, matches], axis=1)
+        splicing_df['cell_id'] = splicing_df['cell_barcode'].astype(str) + '_' + splicing_df['channel_cleaned'].astype(str)
+    elif method == 'ss2_tsp1':
+        splicing_df['cell_id'] = splicing_df['cell'].astype(str) + '.homo.gencode.v30.ERCC.chrM'
+    elif method == "ss2_tsp2":
+        splicing_df['cell_id'] = splicing_df['cell']
+
     # Drop duplicate cell ids and gene names
-    splicing_df_no_dups = splicing_df.drop_duplicates([cell, gene])
+    splicing_df_no_dups = splicing_df.drop_duplicates(['cell_id', gene])
+
     
     if tissue is not None:
         splicing_df_no_dups = splicing_df_no_dups.query('tissue == @tissue')
@@ -25,8 +61,8 @@ def process_splicing(filename, gene='geneR1A_uniq', cell='cell', tissue=None):
     print(splicing_df_no_dups.shape)
     splicing_df_no_dups.head()
     
-    splicing2d = splicing_df_no_dups.pivot(index=cell, columns=gene, values='z')
-    return splicing2d
+#     splicing2d = splicing_df_no_dups.pivot(index='cell_id', columns=gene, values='z')
+    return splicing_df_no_dups
 
 
 def my_nan_euclidean_metric(row_i, row_j):
@@ -132,7 +168,7 @@ def distances_parallel(matrix, n_jobs):
     # Create a memory map of the siglist using numpy to avoid memory burden
     # while accessing small parts in it
     matrix, _ = to_memmap(np.array(matrix))
-    notify("Created memmapped siglist")
+    notify("Created memmapped input matrix")
 
     # Check that length of combinations can result in a square similarity matrix
     length_matrix = len(matrix)
@@ -189,3 +225,14 @@ def distances_parallel(matrix, n_jobs):
         time.time() - start_initial,
     )
     return np.memmap(filename, dtype=np.float64, shape=shape)
+
+
+def make2d(splicing_tidy, index='cell_id', values='scaled_z', columns='geneR1A_uniq'):
+    data2d = splicing_tidy.pivot(index=index, values=values, columns=columns)
+    return data2d
+
+
+def compute_distances_df(splicing2d, n_jobs):
+    dists = distances_parallel(splicing2d, n_jobs=n_jobs)
+    dists_df = pd.DataFrame(dists, index=splicing2d.index, columns=splicing2d.index)
+    return dists_df
