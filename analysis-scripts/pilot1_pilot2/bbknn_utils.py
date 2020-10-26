@@ -18,7 +18,7 @@ from scanpy.tools._utils import get_init_pos_from_paga#, _choose_representation
 from scanpy import logging as logg
 from scanpy._settings import settings
 from scanpy._compat import Literal
-from scanpy._utils import NeighborsView
+from scanpy._utils import AnyRandom, NeighborsView
 
 
 # Lots of this was stolen from https://github.com/theislab/scanpy/blob/master/scanpy/tools/_umap.py
@@ -140,7 +140,7 @@ def assign_neighbors(ad, neighbors_key, knn_distances, knn_indices, set_use_rep=
     }
     distances_key = f'{neighbors_key}__distances'
     connectivities_key = f'{neighbors_key}__connectivities'
-    ad.obsp[connectivities_key] = knn_distances
+    ad.obsp[distances_key] = knn_distances
     ad.obsp[connectivities_key] = csr_matrix(knn_indices)
     ad.uns[neighbors_key]['distances_key'] = distances_key
     ad.uns[neighbors_key]['connectivities_key'] = connectivities_key
@@ -159,15 +159,17 @@ def bbknn_distance_matrix_and_assign_adata(
     distances, 
     adata, 
     neighbors_key='neighbors', 
-    color=['narrow_group', 'species', 'PTPRC', 'SFTPC', 'n_counts', 'n_genes'],
+    batch_key='donor',
+    color=['tissue', 'compartment_pred_svm', 'donor', 'Propagated Annotation'],
+#     color=['narrow_group', 'donor', 'PTPRC', 'SFTPC', 'n_counts', 'n_genes'],
     COUNTS_BASED_UMAP_COORDS=None,
     neighbors_within_batch=15,
     set_use_rep=True,
     **kwargs,
 ):
-    index = similarities.index
+    index = distances.index
     
-    batch_list = adata.obs.loc[index, 'species'].tolist()
+    batch_list = adata.obs.loc[index, batch_key].tolist()
     print(f"len(batch_list): {len(batch_list)}")
 
     # Subtract similarity to get a distance
@@ -177,13 +179,14 @@ def bbknn_distance_matrix_and_assign_adata(
 #     import pdb; pdb.set_trace()
     adata = assign_neighbors(adata, neighbors_key, knn_distances, knn_indices, set_use_rep=set_use_rep)
 
-    umap_precomputed(adata, neighbors_key=neighbors_key, **kwargs)
+    sc.tl.umap(adata, neighbors_key=neighbors_key, **kwargs)
     
     if COUNTS_BASED_UMAP_COORDS is not None:
         assert_array_compare(operator.__ne__, COUNTS_BASED_UMAP_COORDS, adata.obsm['X_umap'])
  
-    sc.pl.umap(adata, neighbors_key=neighbors_key,
-               color=color, ncols=2)
+    for col in color:
+        sc.pl.umap(adata, neighbors_key=neighbors_key,
+                   color=color, ncols=2)
 
 
 
