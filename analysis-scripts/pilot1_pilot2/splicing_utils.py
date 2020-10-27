@@ -11,11 +11,12 @@ import pandas as pd
 
 _quiet = False
 _debug = False
+
+
 def set_quiet(val, print_debug=False):
     global _quiet, _debug
     _quiet = bool(val)
     _debug = bool(print_debug)
-
 
 
 # Cribbed from https://github.com/dib-lab/sourmash/blob/c7ed8bef7de9b1581b9b067517f64ac64f31f9d0/sourmash/logging.py
@@ -23,7 +24,6 @@ def notify(s, *args, **kwargs):
     "A simple logging function => stderr."
     if _quiet:
         return
-
     print(u'\r\033[K', end=u'', file=sys.stderr)
     print(s.format(*args, **kwargs), file=sys.stderr,
           end=kwargs.get('end', u'\n'))
@@ -31,11 +31,9 @@ def notify(s, *args, **kwargs):
         sys.stderr.flush()
 
 
-
 def process_splicing(filename, gene='geneR1A_uniq', cell='cell', tissue=None, method='10x'):
     splicing_df = pd.read_parquet(filename)
-    
-    
+
     # Add cell ids that match the h5ad object
     if method == '10x':
         # regex builder: https://regex101.com/r/rE1xfN/1
@@ -51,17 +49,14 @@ def process_splicing(filename, gene='geneR1A_uniq', cell='cell', tissue=None, me
     # Drop duplicate cell ids and gene names
     splicing_df_no_dups = splicing_df.drop_duplicates(['cell_id', gene])
 
-    
     if tissue is not None:
         splicing_df_no_dups = splicing_df_no_dups.query('tissue == @tissue')
-        
-    
+
     # Don't use rows with empty gene names -- these are unannotated genes
     splicing_df_no_dups = splicing_df_no_dups.query(f'{gene} != ""')
     print(splicing_df_no_dups.shape)
     splicing_df_no_dups.head()
-    
-#     splicing2d = splicing_df_no_dups.pivot(index='cell_id', columns=gene, values='z')
+    # splicing2d = splicing_df_no_dups.pivot(index='cell_id', columns=gene, values='z')
     return splicing_df_no_dups
 
 
@@ -83,6 +78,7 @@ def my_nan_euclidean_metric(row_i, row_j):
     sum_of_squares = np.sum(np.square(i_shared - j_shared))
     distance = np.sqrt(weight * sum_of_squares)
     return distance
+
 
 def my_nan_manhattan_metric(row_i, row_j):
     #     assert row_i.shape == row_j.shape
@@ -129,7 +125,7 @@ def distance_args_unpack(args, metric):
     row_i, row_j = args
     if metric == "euclidean":
         return my_nan_euclidean_metric(row_i, row_j)
-    elif metric == "manhattan"
+    elif metric == "manhattan":
         return my_nan_manhattan_metric(row_i, row_j)
 
 
@@ -253,7 +249,7 @@ def make2d(splicing_tidy, index='cell_id', values='scaled_z', columns='geneR1A_u
     return data2d
 
 
-def compute_distances_df(splicing2d, n_jobs):
-    dists = distances_parallel(splicing2d, n_jobs=n_jobs)
+def compute_distances_df(splicing2d, n_jobs, metric="euclidean"):
+    dists = distances_parallel(splicing2d, n_jobs=n_jobs, metric=metric)
     dists_df = pd.DataFrame(dists, index=splicing2d.index, columns=splicing2d.index)
     return dists_df
