@@ -93,7 +93,7 @@ def my_nan_manhattan_metric(row_i, row_j):
 
     i_shared = row_i[shared]
     j_shared = row_j[shared]
-    distance = np.sum(np.absolute(np.array(X) - np.array(Y)))
+    distance = np.sum(np.absolute(i_shared - j_shared))
     return distance
 
 
