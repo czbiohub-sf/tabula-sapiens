@@ -151,4 +151,3 @@ dependencies:
     - texttable==1.6.3
     - tqdm==4.50.2
     - umap-learn==0.4.6
-prefix: /home/olga/miniconda3/envs/tabula-sapiens
