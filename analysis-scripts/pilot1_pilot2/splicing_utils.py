@@ -157,6 +157,7 @@ def get_distances_at_index(index, matrix, metric):
         index,
         time.time() - startt,
         end="\r",
+        flush=True
     )
     return similarity_list
 
