@@ -84,6 +84,22 @@ def my_nan_euclidean_metric(row_i, row_j):
     distance = np.sqrt(weight * sum_of_squares)
     return distance
 
+def my_nan_manhattan_metric(row_i, row_j):
+    #     assert row_i.shape == row_j.shape
+
+    i_missing = np.isnan(row_i)
+    j_missing = np.isnan(row_j)
+
+    shared = (~i_missing) & (~j_missing)
+    n_shared = shared.sum()
+    if n_shared == 0:
+        return 0
+
+    i_shared = row_i[shared]
+    j_shared = row_j[shared]
+    distance = np.sum(np.absolute(np.array(X) - np.array(Y)))
+    return distance
+
 
 def to_memmap(array):
     """Write a memory mapped array
@@ -107,20 +123,24 @@ def to_memmap(array):
     return large_memmap, filename
 
 
-def distance_args_unpack(args):
+def distance_args_unpack(args, metric):
     """Helper function to unpack the arguments. Written to use in pool.imap
     as it can only be given one argument."""
     row_i, row_j = args
-    return my_nan_euclidean_metric(row_i, row_j)
+    if metric == "euclidean":
+        return my_nan_euclidean_metric(row_i, row_j)
+    elif metric == "manhattan"
+        return my_nan_manhattan_metric(row_i, row_j)
 
 
-def get_distances_at_index(index, matrix):
+def get_distances_at_index(index, matrix, metric):
     """Returns similarities of all the combinations of signature at index in
     the siglist with the rest of the indices starting at index + 1. Doesn't
     redundantly calculate signatures with all the other indices prior to
     index - 1
 
     :param int index: generate masks from this image
+    :param metric: distance metric l1 (manhattan) or l2 (euclidean)
     :param boolean ignore_abundance
         If the sketches are not abundance weighted, or ignore_abundance=True,
         compute Jaccard similarity.
@@ -134,7 +154,7 @@ def get_distances_at_index(index, matrix):
     """
     startt = time.time()
     sig_iterator = itertools.product([matrix[index, :]], matrix[(index + 1) :, :])
-    func = partial(distance_args_unpack,)
+    func = partial(distance_args_unpack, metric=metric)
     similarity_list = list(map(func, sig_iterator))
     notify(
         "comparison for index {} done in {:.5f} seconds",
@@ -145,12 +165,13 @@ def get_distances_at_index(index, matrix):
     return similarity_list
 
 
-def distances_parallel(matrix, n_jobs):
+def distances_parallel(matrix, n_jobs, metric="euclidean"):
     """Compare all combinations of signatures and return a matrix
     of similarities. Processes combinations parallely on number of processes
     given by n_jobs
 
     :param list siglist: list of signatures to compare
+    :param metric: distance metric l1 (manhattan) or l2 (euclidean)
     :param boolean ignore_abundance
         If the sketches are not abundance weighted, or ignore_abundance=True,
         compute Jaccard similarity.
@@ -183,7 +204,7 @@ def distances_parallel(matrix, n_jobs):
     # Initialize the function using func.partial with the common arguments like
     # siglist, ignore_abundance, downsample, for computing all the signatures
     # The only changing parameter that will be mapped from the pool is the index
-    func = partial(get_distances_at_index, matrix=matrix,)
+    func = partial(get_distances_at_index, matrix=matrix, metric=metric)
     notify("Created similarity func")
 
     # Initialize multiprocess.pool
