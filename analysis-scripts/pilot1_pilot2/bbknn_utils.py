@@ -18,7 +18,7 @@ from scanpy.tools._utils import get_init_pos_from_paga#, _choose_representation
 from scanpy import logging as logg
 from scanpy._settings import settings
 from scanpy._compat import Literal
-from scanpy._utils import NeighborsView
+from scanpy._utils import AnyRandom, NeighborsView
 
 
 # Lots of this was stolen from https://github.com/theislab/scanpy/blob/master/scanpy/tools/_umap.py
@@ -140,7 +140,7 @@ def assign_neighbors(ad, neighbors_key, knn_distances, knn_indices, set_use_rep=
     }
     distances_key = f'{neighbors_key}__distances'
     connectivities_key = f'{neighbors_key}__connectivities'
-    ad.obsp[connectivities_key] = knn_distances
+    ad.obsp[distances_key] = knn_distances
     ad.obsp[connectivities_key] = csr_matrix(knn_indices)
     ad.uns[neighbors_key]['distances_key'] = distances_key
     ad.uns[neighbors_key]['connectivities_key'] = connectivities_key
@@ -159,15 +159,18 @@ def bbknn_distance_matrix_and_assign_adata(
     distances, 
     adata, 
     neighbors_key='neighbors', 
-    color=['narrow_group', 'species', 'PTPRC', 'SFTPC', 'n_counts', 'n_genes'],
+    batch_key='donor',
+    color=['tissue', 'compartment_pred_svm', 'donor', 'Propagated Annotation'],
+#     color=['narrow_group', 'donor', 'PTPRC', 'SFTPC', 'n_counts', 'n_genes'],
     COUNTS_BASED_UMAP_COORDS=None,
     neighbors_within_batch=15,
     set_use_rep=True,
     **kwargs,
 ):
-    index = similarities.index
+    index = distances.index
+    distances = distances.loc[index]
     
-    batch_list = adata.obs.loc[index, 'species'].tolist()
+    batch_list = adata.obs.loc[index, batch_key].tolist()
     print(f"len(batch_list): {len(batch_list)}")
 
     # Subtract similarity to get a distance
@@ -177,173 +180,11 @@ def bbknn_distance_matrix_and_assign_adata(
 #     import pdb; pdb.set_trace()
     adata = assign_neighbors(adata, neighbors_key, knn_distances, knn_indices, set_use_rep=set_use_rep)
 
-    umap_precomputed(adata, neighbors_key=neighbors_key, **kwargs)
+    sc.tl.umap(adata, neighbors_key=neighbors_key, **kwargs)
     
     if COUNTS_BASED_UMAP_COORDS is not None:
         assert_array_compare(operator.__ne__, COUNTS_BASED_UMAP_COORDS, adata.obsm['X_umap'])
  
-    sc.pl.umap(adata, neighbors_key=neighbors_key,
-               color=color, ncols=2)
-
-
-
-def _choose_representation(adata, use_rep=None, n_pcs=None, silent=False):
-    verbosity = settings.verbosity
-    if silent and settings.verbosity > 1:
-        settings.verbosity = 1
-    if use_rep is None and n_pcs == 0:  # backwards compat for specifying `.X`
-        logg.warning('use_rep=None and n_pcs=0')
-        use_rep = 'X'
-    if use_rep is None:
-        logg.warning('use_rep=None')
-        if adata.n_vars > settings.N_PCS:
-            logg.warning('adata.n_vars > settings.N_PCS')
-            if 'X_pca' in adata.obsm.keys():
-                if n_pcs is not None and n_pcs > adata.obsm['X_pca'].shape[1]:
-                    raise ValueError(
-                        '`X_pca` does not have enough PCs. Rerun `sc.pp.pca` with adjusted `n_comps`.')
-                X = adata.obsm['X_pca'][:, :n_pcs]
-                logg.info(f'    using \'X_pca\' with n_pcs = {X.shape[1]}')
-            else:
-                logg.warning(
-                    f'You’re trying to run this on {adata.n_vars} dimensions of `.X`, '
-                    'if you really want this, set `use_rep=\'X\'`.\n         '
-                    'Falling back to preprocessing with `sc.pp.pca` and default params.'
-                )
-                X = pca(adata.X)
-                adata.obsm['X_pca'] = X[:, :n_pcs]
-        else:
-            logg.info('    using data matrix X directly')
-            X = adata.X
-    else:
-        if use_rep in adata.obsm.keys():
-            X = adata.obsm[use_rep]
-            if use_rep == 'X_pca' and n_pcs is not None:
-                X = adata.obsm[use_rep][:, :n_pcs]
-        elif use_rep == 'X':
-            X = adata.X
-        else:
-            raise ValueError(
-                'Did not find {} in `.obsm.keys()`. '
-                'You need to compute it first.'.format(use_rep))
-    settings.verbosity = verbosity  # resetting verbosity
-    return X
-    
-
-def umap_precomputed(
-    adata: AnnData,
-    min_dist: float = 0.5,
-    spread: float = 1.0,
-    n_components: int = 2,
-    maxiter: Optional[int] = None,
-    alpha: float = 1.0,
-    gamma: float = 1.0,
-    negative_sample_rate: int = 5,
-    init_pos: Union[_InitPos, np.ndarray, None] = 'spectral',
-    random_state: AnyRandom = 0,
-    a: Optional[float] = None,
-    b: Optional[float] = None,
-    copy: bool = False,
-    method: Literal['umap', 'rapids'] = 'umap',
-    neighbors_key: Optional[str] = None,
-    COUNTS_BASED_UMAP_COORDS=None,
-):
-    adata = adata.copy() if copy else adata
-
-    if neighbors_key is None:
-        neighbors_key = 'neighbors'
-
-    if neighbors_key not in adata.uns:
-        raise ValueError(
-            f'Did not find .uns["{neighbors_key}"]. Run `sc.pp.neighbors` first.')
-    start = logg.info('computing UMAP')
-
-    neighbors = NeighborsView(adata, neighbors_key)
-
-    if ('params' not in neighbors
-        or neighbors['params']['method'] != 'umap'):
-        logg.warning(f'.obsp["{neighbors["connectivities_key"]}"] have not been computed using umap')
-    from umap.umap_ import find_ab_params, simplicial_set_embedding
-    if a is None or b is None:
-        a, b = find_ab_params(spread, min_dist)
-    else:
-        a = a
-        b = b
-    adata.uns['umap'] = {'params':{'a': a, 'b': b}}
-    if isinstance(init_pos, str) and init_pos in adata.obsm.keys():
-        init_coords = adata.obsm[init_pos]
-    elif isinstance(init_pos, str) and init_pos == 'paga':
-        init_coords = get_init_pos_from_paga(adata, random_state=random_state, neighbors_key=neighbors_key)
-    else:
-        init_coords = init_pos  # Let umap handle it
-    if hasattr(init_coords, "dtype"):
-        init_coords = check_array(init_coords, dtype=np.float32, accept_sparse=False)
-
-    if random_state != 0:
-        adata.uns['umap']['params']['random_state'] = random_state
-    random_state = check_random_state(random_state)
-
-    neigh_params = neighbors['params']
-    X = _choose_representation(
-        adata, neigh_params.get('use_rep', None), neigh_params.get('n_pcs', None), silent=True)
-    
-    # ---- debugger ---- #
-#     import pdb; pdb.set_trace()
-    # ---- debugger ---- #
-
-
-    if method == 'umap':
-        # the data matrix X is really only used for determining the number of connected components
-        # for the init condition in the UMAP embedding
-        n_epochs = 0 if maxiter is None else maxiter
-        X_umap = simplicial_set_embedding(
-            X,
-            neighbors['connectivities'].tocoo(),
-            n_components,
-            alpha,
-            a,
-            b,
-            gamma,
-            negative_sample_rate,
-            n_epochs,
-            init_coords,
-            random_state,
-            neigh_params.get('metric', 'euclidean'),
-            neigh_params.get('metric_kwds', {}),
-            verbose=settings.verbosity > 3,
-        )
-    elif method == 'rapids':
-        metric = neigh_params.get('metric', 'euclidean')
-        if metric != 'euclidean':
-            raise ValueError(
-                f'`sc.pp.neighbors` was called with `metric` {metric!r}, '
-                "but umap `method` 'rapids' only supports the 'euclidean' metric."
-            )
-        from cuml import UMAP
-        n_neighbors = neighbors['params']['n_neighbors']
-        n_epochs = 500 if maxiter is None else maxiter # 0 is not a valid value for rapids, unlike original umap
-        X_contiguous = np.ascontiguousarray(X, dtype=np.float32)
-        umap = UMAP(
-            n_neighbors=n_neighbors,
-            n_components=n_components,
-            n_epochs=n_epochs,
-            learning_rate=alpha,
-            init=init_pos,
-            min_dist=min_dist,
-            spread=spread,
-            negative_sample_rate=negative_sample_rate,
-            a=a,
-            b=b,
-            verbose=settings.verbosity > 3,
-        )
-        X_umap = umap.fit_transform(X_contiguous)
-    adata.obsm['X_umap'] = X_umap  # annotate samples with UMAP coordinates
-    logg.info(
-        '    finished',
-        time=start,
-        deep=(
-            'added\n'
-            "    'X_umap', UMAP coordinates (adata.obsm)"
-        ),
-    )
-    return adata if copy else None
+    for col in color:
+        sc.pl.umap(adata, neighbors_key=neighbors_key,
+                   color=col, ncols=2)
