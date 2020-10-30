@@ -14,7 +14,10 @@ RUN apt-get -y update && \
  	python-dev \
  	python-pip \
  	zlib1g-dev \
-	unzip
+	apt-utils \
+	unzip \
+	nodejs \
+	npm
 
 RUN apt-get -y install software-properties-common && \
 	apt-key adv --keyserver keys.gnupg.net --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF' && \
@@ -54,7 +57,7 @@ RUN R -e "install.packages('devtools')" &&\
 #RUN R -e "install.packages('devtools');library('devtools'); devtools::install_github('pcahan1/singleCellNet')"
 #RUN R -e "install.packages('devtools'); devtools::install_github('pcahan1/singleCellNet')"
 
-RUN [ "/bin/bash", "-c", "source activate tabula_sapiens && python -m ipykernel install --user --name=tabula_sapiens --display-name=tabula_sapiens && jupyter nbextension enable --py widgetsnbextension"]
+RUN [ "/bin/bash", "-c", "source activate tabula_sapiens && python -m ipykernel install --user --name=tabula_sapiens --display-name=tabula_sapiens && jupyter nbextension enable --py widgetsnbextension && jupyter labextension install @jupyter-widgets/jupyterlab-manager"]
 #RUN [ "/bin/bash", "-c", "source activate tabula_sapiens && python -m ipykernel install --user --name=tabula_sapiens --display-name=tabula_sapiens"]
 CMD [ "cd /home/ && source activate tabula_sapiens && \
        jupyter lab --port=8888 --no-browser --ip=0.0.0.0 --allow-root"]
