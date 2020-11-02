@@ -43,7 +43,7 @@ def donor_colors():
 
 # create a color dictionary for donors
 def compartment_colors():
-    compartments = ['Endothelial', 'Epithelial', 'Immune', 'Stromal']
+    compartments = ['Endothelial', 'Epithelial', 'Immune', 'Stromal','PNS','remove']
     
     import matplotlib.colors as pltcolors
     
