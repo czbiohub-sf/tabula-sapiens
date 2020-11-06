@@ -18,6 +18,7 @@ dependencies:
     - dataclasses==0.7
     - decorator==4.4.1
     - fbpca==1.0
+    - flask==1.1.2
     - gast==0.3.2
     - h5py==2.9.0
     - idna==2.8

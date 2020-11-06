@@ -1,5 +1,4 @@
 import os
-
 import scanpy as sc
 import numpy as np
 import torch
@@ -7,9 +6,10 @@ import torch
 from OnClass.utils import *
 from OnClass.OnClassModel import OnClassModel
 from OnClass.other_datasets_utils import my_assemble, data_names_all, load_names
-
 from sklearn.svm import LinearSVC
 from rpy2.robjects.packages import importr
+
+
 import rpy2.robjects as ro
 
 from rpy2.robjects import pandas2ri
@@ -21,15 +21,16 @@ singleCellNet = importr("singleCellNet")
 
 
 def setup_dataset(
-    input_anndata,
-    ts_filepath,
+    input_anndata_path,
+    ref_anndata_path,
     tissue=None,
     use_10X_only=False,
     batch_correction_conditions=None,
 ):
     # TODO check that the input vars are the same
-    train_data = sc.read_h5ad(ts_filepath)
-    test_data = sc.read_h5ad(input_anndata)
+    train_data = sc.read_h5ad(ref_anndata_path)
+    test_data = sc.read_h5ad(input_anndata_path)
+    
     if tissue is not None:
         train_data = train_data[train_data.obs["tissue"] == tissue]
     if use_10X_only:
