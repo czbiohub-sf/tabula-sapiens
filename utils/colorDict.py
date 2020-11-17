@@ -14,7 +14,7 @@ def tissue_colors():
              'Lymph_Node': '#8c6d31',
              'Muscle': '#e7ba52',
              'Pancreas': '#fd8d3c',
-             'Skin': '#ce6dbd',
+#              'Skin': '#ce6dbd',
              'Small_Intestine': '#6baed6',
              'Spleen': '#393b79',
              'Thymus': '#9c9ede',
@@ -43,7 +43,7 @@ def donor_colors():
 
 # create a color dictionary for donors
 def compartment_colors():
-    compartments = ['Endothelial', 'Epithelial', 'Immune', 'Stromal','PNS','remove']
+    compartments = ['Endothelial', 'Epithelial', 'Immune', 'Stromal','PNS']
     
     import matplotlib.colors as pltcolors
     
