@@ -17,9 +17,7 @@ build-frontend:
 build: build-backend build-frontend
 
 run-annotation-notebook: stop-annotation-notebook build-annotation-notebook
-	docker run -d --name $(ANNOTATION_DOCKER_IMAGE) --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "$$PWD"/notebooks:/home/jovyan $(ANNOTATION_DOCKER_IMAGE) && \
-	sleep 5 && \
-	docker logs $(ANNOTATION_DOCKER_IMAGE)
+	docker run -it --name $(ANNOTATION_DOCKER_IMAGE) --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "$$PWD"/notebooks:/home/jovyan/work $(ANNOTATION_DOCKER_IMAGE)
 
 stop-annotation-notebook:
 	- docker stop $(ANNOTATION_DOCKER_IMAGE)
