@@ -2,6 +2,7 @@ VERBOSE=1
 BACKEND_DOCKER_IMAGE = czbiohub/sc-rna-seq-processing
 FRONTEND_DOCKER_IMAGE = frontend
 ANNOTATION_DOCKER_IMAGE = sapiens-annotation-notebook
+NOTEBOOK_PORT = 8888
 
 .PHONY: notebooks
 
@@ -16,17 +17,20 @@ build-frontend:
 
 build: build-backend build-frontend
 
-get-data:
-	bash cd backend/download-data.sh
+get-data: backend/data
 
-run-annotation-notebook: stop-annotation-notebook build-annotation-notebook
-	docker run -it \
+backend/data:
+	cd backend && bash download-data.sh
+
+run-annotation-notebook: stop-annotation-notebook build-annotation-notebook get-data
+	docker run -t \
 		   --name $(ANNOTATION_DOCKER_IMAGE) \
-		   --rm -p 8888:8888 \
+		   --rm -p $(NOTEBOOK_PORT):8888 \
 		   -e JUPYTER_ENABLE_LAB=yes \
+		   -e NB_PORT=$(NOTEBOOK_PORT) \
 		   -v "$$PWD"/notebooks:/home/jovyan/work \
 		   -v "$$PWD/backend/data:/home/jovyan/work/data" \
-		   $(ANNOTATION_DOCKER_IMAGE)
+		   $(ANNOTATION_DOCKER_IMAGE) | sed 's/:8888/:$(NOTEBOOK_PORT)/g'
 
 stop-annotation-notebook:
 	- docker stop $(ANNOTATION_DOCKER_IMAGE)
