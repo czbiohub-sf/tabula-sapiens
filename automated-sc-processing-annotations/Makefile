@@ -10,6 +10,9 @@ check-env:
 ifndef NAME
 	$(error You must supply a name for the docker container by setting NAME)
 endif
+ifndef DATA_PATH
+	$(error You must supply a path to the data you want to analyze by setting DATA_PATH)
+endif
 
 build-annotation-notebook:
 	cd notebooks && docker build --tag $(ANNOTATION_DOCKER_IMAGE) .
@@ -22,12 +25,7 @@ build-frontend:
 
 build: build-backend build-frontend
 
-get-data: backend/data
-
-backend/data:
-	cd backend && bash download-data.sh
-
-run-annotation-notebook: check-env stop-annotation-notebook build-annotation-notebook get-data
+run-annotation-notebook: check-env stop-annotation-notebook build-annotation-notebook
 	docker run -t \
 		   -u root \
 		   --name $(NAME) \
@@ -36,8 +34,8 @@ run-annotation-notebook: check-env stop-annotation-notebook build-annotation-not
 		   -e NB_GID=$$(id -g $$USER) \
 		   -e JUPYTER_ENABLE_LAB=yes \
 		   -e NB_PORT=$(NOTEBOOK_PORT) \
-		   -v "$$PWD"/notebooks:/home/jovyan/work:rw \
-		   -v "$$PWD/backend/data:/home/jovyan/work/data":rw \
+		   -v "$$PWD"/notebooks:/home/jovyan/work \
+		   -v ${DATA_PATH}:/home/jovyan/work/data \
 		   $(ANNOTATION_DOCKER_IMAGE) | sed 's/:8888/:$(NOTEBOOK_PORT)/g'
 
 stop-annotation-notebook: check-env
