@@ -29,8 +29,11 @@ backend/data:
 
 run-annotation-notebook: check-env stop-annotation-notebook build-annotation-notebook get-data
 	docker run -t \
+		   -u root \
 		   --name $(NAME) \
 		   --rm -p $(NOTEBOOK_PORT):8888 \
+		   -e NB_UID=$$(id -u $$USER) \
+		   -e NB_GID=$$(id -g $$USER) \
 		   -e JUPYTER_ENABLE_LAB=yes \
 		   -e NB_PORT=$(NOTEBOOK_PORT) \
 		   -v "$$PWD"/notebooks:/home/jovyan/work:rw \
