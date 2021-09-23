@@ -1,0 +1,28 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: snakemake config file for scRNA-seq assembly and alignment
+
+type: object
+
+properties:
+
+  base:
+    type: string
+    description: path to sequencing folder
+
+  samplesheet:
+    type: string
+
+  species:
+    enum:
+      - human
+      - mouse
+
+  default_partition:
+    type: string
+
+required:
+  - base
+  - samplesheet
+  - species
+  - default_partition
