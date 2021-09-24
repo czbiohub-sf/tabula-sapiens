@@ -1,0 +1,18 @@
+
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: 10X genomics standard 3 column format
+properties:
+  Lane:
+    type: string
+  
+  Sample:
+    type: string
+
+  Index:
+    type: string
+
+required:
+  - Lane
+  - Sample
+  - Index

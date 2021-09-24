@@ -1,0 +1,5 @@
+source:  http://www.imgt.org/IMGT_GENE-DB
+date:    2020.07.18
+species:
+    - human:Homo+sapiens
+    - mouse:Mus
