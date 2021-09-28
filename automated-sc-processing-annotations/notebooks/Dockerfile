@@ -9,7 +9,9 @@ USER jovyan
 RUN pip install --quiet --upgrade \
 	"tensorflow>=1.15" \
 	git+https://github.com/wangshenguiuc/OnClass@master \
-	"git+https://github.com/yoseflab/scvi-tools@master#egg=scvi-tools[tutorials]"
+	"git+https://github.com/yoseflab/scvi-tools@master#egg=scvi-tools[tutorials]" \
+	"obonet>=0.3.0" \
+	"bbknn>=1.4.1"
 
 RUN pip install --quiet --upgrade --no-deps scanorama
 
