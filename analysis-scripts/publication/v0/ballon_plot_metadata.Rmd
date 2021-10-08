@@ -8,28 +8,45 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r}
-# install.packages("ggpubr")
+install.packages("ggpubr")
 library(ggpubr)
+getwd()
 
-
-sapiens.metadata <- read.csv("./sapiens_metadata_ballon_plot.csv", row.names=1, stringsAsFactors=FALSE)
+sapiens.metadata <- read.csv("~/src/sapiens/paper/results/sapiens_metadata_ballon_plot.csv", row.names=1, stringsAsFactors=FALSE)
 sapiens.metadata
 
+lemur.metadata <- read.csv("/data/angela/tabula-microcebus/lemur_metadata_ballon_plot.csv", row.names=1, stringsAsFactors=FALSE)
+lemur.metadata
+
+q<-ggballoonplot(lemur.metadata, x = "individual", y = "method",
+ size = "cell_ontology_class", fill = "tissue",
+ facet.by = c("tissue","trickR"),
+ ggtheme = theme_bw()
+) + scale_x_discrete(limits=c('Lemur 1','Lemur 2','Lemur 3','Lemur 4'))#+ 
+  #fill_palette(my_cols)
+h = 4
+ggsave(plot = q, width = 1.4*h, height = 4.75*h, dpi = 300, filename = "/data/angela/tabula-microcebus/lemur_complete_metadata_ballon.pdf", useDingbats=FALSE)
+
+sapiens.metadata <- read.csv(
+  "/data/angela/sapiens/tabula-sapiens/analysis-scripts/publication/v0/sapiens_metadata_ballon_plot.csv", 
+  row.names=1, stringsAsFactors=FALSE)
+sapiens.metadata
+
+
 # set colors
-my_cols <- c('#e7969c', '#d6616b', '#cedb9c', '#e7cb94', '#637939', '#7b4173', '#31a354', '#3182bd', '#8c6d31', '#e7ba52', '#fd8d3c', '#ce6dbd', '#6baed6', '#393b79', '#9c9ede', '#969696', '#843c39')
-# exclude Fat & Heart
-my_cols <- c('#e7969c', '#d6616b', '#cedb9c', '#7b4173', '#31a354', '#3182bd', '#8c6d31', '#e7ba52', '#fd8d3c', '#ce6dbd', '#6baed6', '#393b79', '#9c9ede', '#969696', '#843c39')
+my_cols <- c('#e7969c','#d6616b','#cedb9c','#c7ea46','#e7cb94', '#ff0800','#7b4173', '#31a354', '#000080','#3182bd',
+             '#8c6d31','#ce6dbd', '#e7ba52','#fd8d3c','#637939','#622a0f', '#de9ed6', '#6baed6', '#393b79','#9c9ede',
+             '#b5cf6b','#969696','#c64b8c', '#843c39')
 
 my_cols
 
 
 
-maca.facs.metadata
-q<-ggballoonplot(maca.facs.metadata, x = "donor", y = "trickR",
- size = "cell_id", fill = "tissue",
+q<-ggballoonplot(sapiens.metadata, x = "donor", y = "trickR",
+ size = "cell_identifier", fill = "tissue",
  facet.by = c("tissue","method"),
  ggtheme = theme_bw()
-) + scale_x_discrete(limits=c('TSP1','TSP2'))+ #scale_fill_gradientn(colors = my_cols)
+) + scale_x_discrete(limits=c('TSP1','TSP2','TSP3','TSP4','TSP5',"TSP6","TSP7","TSP8","TSP9","TSP10","TSP11","TSP12","TSP13","TSP14","TSP15"))+ #scale_fill_gradientn(colors = my_cols)
  #  scale_y_discrete(limits=c('Vasculature',
  # 'Trachea',
  # 'Thymus',
@@ -49,8 +66,16 @@ q<-ggballoonplot(maca.facs.metadata, x = "donor", y = "trickR",
  # 'Bladder'))+
   fill_palette(my_cols)#
 h = 4
-ggsave(plot = q, width = h, height = 2*h, dpi = 300, filename = "sapiens_metadata.pdf", useDingbats=FALSE)
-getwd()
+ggsave(plot = q, width = h, height = 2*h, dpi = 300, filename = "sapiens_complete_metadata_ballon.pdf", useDingbats=FALSE)
+
+q<-ggballoonplot(sapiens.metadata, x = "donor", y = "trickR",
+ size = "cell_identifier", fill = "tissue",
+ facet.by = c("tissue","method"),
+ ggtheme = theme_bw()
+) + scale_x_discrete(limits=c('TSP1','TSP2','TSP3','TSP4','TSP5',"TSP6","TSP7","TSP8","TSP9","TSP10","TSP11","TSP12","TSP13","TSP14","TSP15"))+ 
+  fill_palette(my_cols)
+h = 4
+ggsave(plot = q, width = 3*h, height = 3.5*h, dpi = 300, filename = "sapiens_complete_metadata_ballon.pdf", useDingbats=FALSE)
 
 
 ```

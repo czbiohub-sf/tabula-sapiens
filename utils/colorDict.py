@@ -6,27 +6,36 @@ def tissue_colors():
     tissue_color_dict = {'Bladder': '#e7969c',
              'Blood': '#d6616b',
              'Bone_Marrow': '#cedb9c',
-#              'Fat': '#e7cb94',
-#              'Heart': '#637939',
+             'Eye': '#c7ea46',#"#00ff7f",
+             'Fat': '#e7cb94',
+             'Heart': '#ff0800',
              'Kidney': '#7b4173',
              'Large_Intestine': '#31a354',
+             'Liver': '#000080',
              'Lung': '#3182bd',
              'Lymph_Node': '#8c6d31',
+             'Mammary':'#ce6dbd',
              'Muscle': '#e7ba52',
              'Pancreas': '#fd8d3c',
-#              'Skin': '#ce6dbd',
+             'Prostate':'#637939',#'#a55194',#
+             'Salivary_Gland':'#622a0f',
+             'Skin': '#de9ed6',
              'Small_Intestine': '#6baed6',
              'Spleen': '#393b79',
              'Thymus': '#9c9ede',
+             'Tongue':'#b5cf6b',
              'Trachea': '#969696',
+             'Uterus':'#c64b8c',#'#ff0090',
              'Vasculature': '#843c39'}
     
     return tissue_color_dict
 
 
+
+
 # create a color dictionary for donors
 def donor_colors():
-    donors = ['TSP1','TSP2']
+    donors = ['TSP1','TSP2','TSP3','TSP4','TSP5','TSP6','TSP7','TSP8','TSP9','TSP10','TSP11','TSP12','TSP13','TSP14','TSP15']
     
     import matplotlib.colors as pltcolors
     
@@ -43,7 +52,8 @@ def donor_colors():
 
 # create a color dictionary for donors
 def compartment_colors():
-    compartments = ['Endothelial', 'Epithelial', 'Immune', 'Stromal','PNS']
+    
+    compartments = ['endothelial', 'epithelial', 'immune', 'stromal', "germ line",'PNS']
     
     import matplotlib.colors as pltcolors
     
@@ -69,6 +79,19 @@ def method_colors():
     method_color_dict['smartseq2'] = '#006400'
     
     return method_color_dict
+
+# create a color dictionary for sex
+def sex_colors():
+    sexes = ['male','female','undisclosed']
+    
+    import matplotlib.colors as pltcolors
+    
+    sex_color_dict = {}
+    sex_color_dict['female'] = '#f4cae4'
+    sex_color_dict['male'] = '#cbd5e8'
+#     sex_color_dict['undisclosed'] = '#e6f5c9'
+    
+    return sex_color_dict
 
 # visualize the color dictionaries
 def plot_colortable(colors, title, sort_colors=True, emptycols=0):
