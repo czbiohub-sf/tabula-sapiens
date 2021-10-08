@@ -1,1 +1,0 @@
-After cloning this repo copy the data files here
