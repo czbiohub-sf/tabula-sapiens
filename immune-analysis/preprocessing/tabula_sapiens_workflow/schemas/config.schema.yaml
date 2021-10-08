@@ -1,0 +1,66 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: snakemake config file for scRNA-seq assembly and alignment
+
+type: object
+
+properties:
+
+  samplesheet:
+    type: string
+
+  container_type:
+    type: string
+
+  singularity_pre_cmd:
+    type: string
+
+  species:
+    enum:
+      - human
+      - mouse
+
+  receptor:
+    enum:
+      - BCR
+      - TCR
+
+  default_partition:
+    type: string
+
+  scratch:
+    type: string
+
+  read_length:
+    type: integer
+
+  include_ERCCs:
+    type: boolean
+
+  fasta_url:
+    type: object
+
+  gtf_url:
+    type: object
+
+  fasta_name:
+    type: object
+
+  gtf_name:
+    type: object
+
+  SRA:
+    type: boolean
+
+required:
+  - samplesheet
+  - container_type
+  - species
+  - receptor
+  - default_partition
+  - read_length
+  - include_ERCCs
+  - fasta_url
+  - fasta_name
+  - gtf_url
+  - gtf_name

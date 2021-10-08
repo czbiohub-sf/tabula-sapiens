@@ -1,0 +1,15 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: an entry in the cell sheet
+properties:
+  base:
+    type: string
+    description: full path to parent directory of the sample
+
+  samplename:
+    type: string
+    description: sample (cell) directory name
+
+required:
+  - base
+  - samplename
