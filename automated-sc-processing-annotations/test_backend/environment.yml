@@ -1,7 +1,0 @@
-name: backend
-channels:
-    - conda-forge
-
-dependencies:
-   - flask==1.1.2
-   - python-dotenv==0.15.0
