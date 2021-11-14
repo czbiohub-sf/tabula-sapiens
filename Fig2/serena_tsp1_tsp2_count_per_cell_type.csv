@@ -1,0 +1,21 @@
+image_id,endothelial_cell_count,epithelial_cell_count,immune_cell_count,stromal_cell_count,endothelial_pixel_count,epithelial_pixel_count,immune_pixel_count,stromal_pixel_count
+10x-1proximal_lung_labels.png,127,1153,362,637,1805,20318,4765,9604
+10x-2_pilot2_trachea_labels.png,65,764,143,1113,1061,15013,2261,18294
+10x-3_pilot2_aorta_less_diseased_labels.png,34,0,0,450,330,0,0,4892
+10x-3proximal_lung_labels.png,45,687,64,1274,758,20490,539,19948
+20x-1 cartilage_pilot2_trachea_labels.png,0,0,0,138,0,0,0,7751
+20x-1_pilot2_aorta_less_diseased_labels.png,0,0,0,498,0,0,0,13928
+20x-1mid_lung_labels.png,21,0,0,556,959,0,0,24907
+20x-4_pilot2_aorta_less_diseased_labels.png,0,0,0,428,0,0,0,9135
+20x-4mid_lung_labels.png,32,306,253,475,1412,18764,8267,22850
+IN-A 10x 4_pilot2_intestine_labels.png,275,0,0,1777,2984,0,0,21522
+IN-A 40x 4_pilot2_intestine_labels.png,9,0,0,132,1076,0,0,16141
+IN-B 10x 2_pilot2_intestine_labels.png,146,48,174,1182,1846,1427,1802,15909
+IN-B 40x 1_pilot2_intestine_labels.png,2,324,513,56,116,31701,52530,4796
+IN-C 40x 2_pilot2_intestine_labels.png,41,526,178,75,5100,69192,18975,8012
+IN-D 20x 1_pilot2_intestine_labels.png,3,0,0,797,230,0,0,34939
+IN-D 20x 3_pilot2_intestine_labels.png,4,0,3,46,139,0,142,1870
+PN 20x 1_pilot1_pancreas_labels.png,10,2378,15,325,222,117701,809,14203
+PN 20x 3_pilot1_pancreas_labels.png,46,1830,8,91,1117,83315,253,2473
+PN 40x 5_pilot1_pancreas_labels.png,58,93,19,116,5085,11865,1600,10279
+PN 40x 6_pilot1_pancreas_labels.png,29,61,0,306,2280,7373,0,35055
