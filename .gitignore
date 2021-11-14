@@ -1,4 +1,4 @@
 # General
 .ipynb_checkpoints
 /data/angela/sapiens/tabula-sapiens/analysis-scripts/publication/
-.pdf
+"*.pdf"
