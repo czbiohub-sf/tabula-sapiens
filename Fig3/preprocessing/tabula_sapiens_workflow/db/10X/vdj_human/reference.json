@@ -1,0 +1,10 @@
+{
+    "fasta_hash": "35c1b06ad507660b7586e753b2353cbfada6ff6c",
+    "genomes": "vdj_human",
+    "gtf_hash": null,
+    "input_fasta_files": "vdj_human-mkvdjref-input.fasta",
+    "input_gtf_files": null,
+    "mkref_version": "cellranger-6.0.1",
+    "type": "V(D)J Reference",
+    "version": null
+}

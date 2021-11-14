@@ -1,0 +1,67 @@
+# ----------------------------------------
+# General
+# path to sheet describing each cell
+samplesheet: samplesheets/samplesheet.tab
+# output directory for processed data
+base: "/oak/stanford/groups/quake/mswift/tabula_sapiens"
+raw_data: "/oak/stanford/groups/quake/shared/NovaSeq/TSP2_5prime_TSP6_TSP7/Tabula_Sapiens/"
+SS2_download: "/oak/stanford/groups/quake/mswift/tabula_sapiens/SS2"
+# the assembly pipeline uses the immcantation framework for IgBLAST
+# gene segment calling and results parsing
+# options: 'docker' or 'singularity'
+container_type: singularity
+
+# human or mouse
+species: human
+
+# partition (for cluster computing)
+partition: "quake,owners"
+# Software
+#---------------------------
+cell_ranger: "/home/groups/quake/mswift/resources/cellranger-6.0.1"
+vdj_ref_prefix: "vdj_human"
+#cell_ranger_ref: "/oak/stanford/groups/quake/mswift/resources/cellranger/refdata-cellranger-vdj-GRCh38-alts-ensembl-3.1.0/"
+# ----------------------------------------
+# optional scratch environmental variable for cluster computing
+#scratch: '$L_SCRATCH'
+
+# ----------------------------------------
+# Alignment
+
+# sequencing read length e.g. 100 for 2x100 paired-end sequencing
+# (used during STAR genome generation)
+read_length: 100
+
+# whether or not to include ERCCs in the genome fasta and gtf 
+include_ERCCs: True
+
+
+# STAR alignment: fasta and gtf files
+# (these should not need to be changed)
+fasta_url:
+  human: ftp://ftp.ensembl.org/pub/release-93/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+  mouse: ftp://ftp.ensembl.org/pub/release-93/fasta/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz
+
+fasta_name:
+  human: Homo_sapiens.GRCh38.dna.primary_assembly
+  mouse: Mus_musculus.GRCm38.dna.primary_assembly
+
+gtf_url: 
+  human: ftp://ftp.ensembl.org/pub/release-93/gtf/homo_sapiens/Homo_sapiens.GRCh38.93.gtf.gz
+  mouse: ftp://ftp.ensembl.org/pub/release-93/gtf/mus_musculus/Mus_musculus.GRCm38.93.gtf.gz
+
+gtf_name:
+  human: Homo_sapiens.GRCh38.93
+  mouse: Mus_musculus.GRCm38.93
+
+ighc_db:
+  human: db/IGHC/human_IGHC_IMGT_membrane_only_reformatted.fasta
+  imgt_exons: db/IGHC/IGHC_exons.bed
+  imgt_introns: db/IGHC/IGHC_introns_inner.bed
+  mouse: db/IGHC/mouse_IGHC_IMGT_reformatted.fasta
+
+path_to_grmlin: /home/users/cvijovic/ig-germline-discovery/grmlin/
+
+IGDBDIR: /oak/stanford/groups/quake/shared/swiftShare/igblast
+
+scripts: ./scripts
