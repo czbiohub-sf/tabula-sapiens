@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/200055743.svg)](https://zenodo.org/badge/latestdoi/200055743)
+
+
 # tabula-sapiens
 
 Welcome to Tabula Sapiens!
