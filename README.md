@@ -9,7 +9,7 @@ Welcome to Tabula Sapiens!
 
 # Where is the data
 ## Raw data
-Since April 2021, Tabula Sapiens data have been made available to all users free of charge. AWS has made the data freely available on Amazon S3 so that anyone can download the resource to perform analysis and advance medical discovery without needing to worry about the cost of storing Tabula Sapiens data or the time required to download it. The data can be browsed but before you can download we require users to [complete a data sharing agreement](https://apps.docusign.com/webforms/us/929255c461f4bb15efc65d776f103035?r=1).
+Since April 2021, [Tabula Sapiens data]("https://aws.amazon.com/marketplace/pp/prodview-3knq6mp7oquu6") have been made available to all users free of charge. This product is part of the AWS Open Data Sponsorship Program and contains data sets that are publicly available for anyone to access and use. AWS has made the data freely available so that anyone can download the resource to perform analysis and advance medical discovery without needing to worry about the cost of storing Tabula Sapiens data or the time required to download it. The data can be browsed but before you can download we require users to [complete a data sharing agreement](https://apps.docusign.com/webforms/us/929255c461f4bb15efc65d776f103035?r=1).
 
 The s3 public bucket follows this example structure:
 
