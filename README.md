@@ -8,6 +8,9 @@ Welcome to Tabula Sapiens!
 <img src="https://github.com/czbiohub/tabula-sapiens/blob/master/sapiens_logo.png" width="50%" height="50%">
 
 # Where is the data
+## Data Portal
+For a complete walkthrough the resource checkout our portal: http://tabula-sapiens-portal.ds.czbiohub.org/
+
 ## Raw data
 Since April 2021, [Tabula Sapiens data]("https://aws.amazon.com/marketplace/pp/prodview-3knq6mp7oquu6") have been made available to all users free of charge. This product is part of the AWS Open Data Sponsorship Program and contains data sets that are publicly available for anyone to access and use. AWS has made the data freely available so that anyone can download the resource to perform analysis and advance medical discovery without needing to worry about the cost of storing Tabula Sapiens data or the time required to download it. The data can be browsed but before you can download we require users to [complete a data sharing agreement](https://apps.docusign.com/webforms/us/929255c461f4bb15efc65d776f103035?r=1).
 
@@ -15,36 +18,52 @@ The s3 public bucket follows this example structure:
 
 ```
 aws s3 ls czb-tabula-sapiens
-├── Donor1/
-├── Donor10/
-├── Donor11/
-├── Donor12/
-├── Donor13/
-├── Donor14/
-├── Donor15/
-├── Donor2/
-│   ├── alignment-gencode/
-│   │   ├── 10X/
-│   │   ├── smartseq2/
-│   ├── fastqs/
-│   │   ├── 10X/
-│   │   ├── smartseq2/
-│   ├── gene-count-tables/
-│   ├── immune-repertoire-analysis/
-│   │   ├── bracer/
-│   │   ├── tracer/
-├── Donor3/
-├── Donor4/
-├── Donor5/
-├── Donor6/
-├── Donor7/
-├── Donor8/
-├── Donor9/
-├── reference/
-│   ├── cellranger/
-│   │   ├── homo.gencode.v30.annotation.ERCC92.tgz
-│   ├── STAR/
-│   │   ├── homo.gencode.v30.annotation.ERCC92.tgz
+├──TabulaSapiens_v1_Science2022
+│   ├── Donor1/
+│   ├── Donor10/
+│   ├── Donor11/
+│   ├── Donor12/
+│   ├── Donor13/
+│   ├── Donor14/
+│   ├── Donor15/
+│   ├── Donor2/
+│   │   ├── alignment-gencode/
+│   │   │   ├── 10X/
+│   │   │   ├── smartseq2/
+│   │   ├── fastqs/
+│   │   │   ├── 10X/
+│   │   │   ├── smartseq2/
+│   │   ├── gene-count-tables/
+│   │   ├── immune-repertoire-analysis/
+│   │   │   ├── bracer/
+│   │   │   ├── tracer/
+│   ├── Donor3/
+│   ├── Donor4/
+│   ├── Donor5/
+│   ├── Donor6/
+│   ├── Donor7/
+│   ├── Donor8/
+│   ├── Donor9/
+│   ├── reference/
+│   │   ├── cellranger/
+│   │   │   ├── homo.gencode.v30.annotation.ERCC92.tgz
+│   │   ├── STAR/
+│   │   │   ├── homo.gencode.v30.annotation.ERCC92.tgz
+│   ├── ...
+├──TabulaSapiens_v2
+│   ├── reference/
+│   │   ├── gencode_v41_cellranger.tar.gz
+│   │   ├── gencode_v41_ercc_star.tgz
+│   │   ├── ...
+│   ├── Donor1/
+│   ├── Donor2/
+│   │   ├── alignment-gencode/
+│   │   │   ├── smartseq2/
+│   │   │   ├── TSP2_...
+│   │   ├── fastqs/
+│   │   │   ├── 10X/
+│   │   │   ├── smartseq2/
+│   ...
 
 ```
 
@@ -55,13 +74,9 @@ For instructions on how to create an AWS account (free of charge) please refer t
 
 ## Processed data
 Our ready-to-use data is available from figshare: https://figshare.com/projects/Tabula_Sapiens/100973
-
+All files can be interactively explored in the [cellxgene portal](https://cellxgene.cziscience.com/collections/e5f58829-1a66-40b5-a624-9046778e74f5)
 If you would like to use cellxgene to explore the data on your local machine consider using [exploratory-cellxgene](https://github.com/czbiohub/cellxgene)
-
 
 
 # How to use cellxgene
 Checkout detailed instructions [here](run-cellxgene.md)
-
-# Data Portal
-To interact with the data checkout our portal: http://tabula-sapiens-portal.ds.czbiohub.org/
