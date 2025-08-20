@@ -11,7 +11,7 @@ Welcome to Tabula Sapiens!
 ## Data Portal
 For a complete walkthrough the resource checkout our portal: http://tabula-sapiens-portal.ds.czbiohub.org/
 
-## Extended Metadata
+## Extended Donor Metadata
 To search extended donor metadata, go to [ChatTS](https://singlecellgpt.com/chatTSP?password=chatTS), and see the [instructions](paper2/Figure6/ChatTS/README.md) for help.
 
 ## Raw data
