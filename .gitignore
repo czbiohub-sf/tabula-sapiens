@@ -2,3 +2,4 @@
 .ipynb_checkpoints
 /data/angela/sapiens/tabula-sapiens/analysis-scripts/publication/
 "*.pdf"
+.DS_Store
