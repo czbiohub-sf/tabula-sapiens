@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XDK2FNF2V"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2XDK2FNF2V');
+    </script>
+    <!-- Harper Hua -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>ChatTS</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #153955, #3b82f6);
+            color: #1f2937; /* Dark grey */
+            text-align: center;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #f9fafb; /* Light grey */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 1000px;
+            position: relative;
+        }
+        h2 {
+            margin-top: 0;
+            color: #153955; /* Dark blue */
+        }
+        h4 {
+            color: #4b5563; /* Medium grey */
+            font-weight: 300;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .input-row label {
+            margin-right: 10px;
+            color: #153955; /* Dark blue */
+        }
+        .input-field {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d1d5db; /* Light grey border */
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        #submit {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #d1d5db; /* Light grey border */
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #153955; /* Dark blue */
+            color: white;
+            cursor: pointer;
+        }
+        #submit:hover {
+            background-color: #3b82f6; /* Lighter blue */
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .radio-group label {
+            margin: 0 15px;
+        }
+        #loadingIndicator {
+            visibility: hidden;
+            margin: 20px 0;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            opacity: 0.8;
+        }
+        #reset {
+            background-color: #ef4444; /* Red */
+            color: white;
+        }
+        #download {
+            background-color: #153955; /* Dark blue */
+            color: white;
+        }
+        #answer {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            position: relative;
+        }
+        .table-container {
+            overflow-x: auto;
+            position: relative;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            min-width: 1000px; /* Ensures table is wider than container for horizontal scroll */
+        }
+        table, th, td {
+            border: 1px solid #d1d5db; /* Light grey */
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #153955; /* Dark blue */
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        td:first-child, th:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #f3f4f6; /* Light grey */
+            z-index: 1;
+        }
+        tr:nth-child(even) {
+            background-color: #f9fafb; /* Very light grey */
+        }
+        tr:nth-child(odd) {
+            background-color: #f3f4f6; /* Light grey */
+        }
+        .help-button, .github-button {
+            position: absolute;
+            top: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #153955; /* Dark blue */
+        }
+        .help-button:hover, .github-button:hover {
+            color: #3b82f6; /* Lighter blue */
+        }
+        .help-button {
+            right: 60px;
+        }
+        .github-button {
+            right: 20px;
+        }
+        .help-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            border: 1px solid #d1d5db; /* Light grey */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        .help-content h3 {
+            color: #153955; /* Dark blue */
+        }
+        .help-content button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #153955; /* Dark blue */
+        }
+        .help-content button:hover {
+            color: #3b82f6; /* Lighter blue */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>ChatTS</h2>
+        <h4>Fast, easy retrieval of metadata for Tabula Sapiens.</h4>
+        <form id="questionForm">
+            <div class="input-row">
+                <label for="apiKey">OpenAI API Key:</label>
+                <input type="password" id="apiKey" name="apiKey" placeholder="Your OpenAI API key..." class="input-field">
+            </div>
+            <div class="input-row">
+                <label for="question">Your question:</label>
+                <input type="text" id="question" name="question" placeholder="Your question..." class="input-field">
+            </div>
+            <div class="radio-group">
+                <input type="radio" id="binary" name="answerStyle" value="binary" checked>
+                <label for="binary"><span>Data Retriever</span><br><span>(i.e. What is the donor's age?)</span></label>
+                <input type="radio" id="detailed" name="answerStyle" value="detailed">
+                <label for="detailed"><span>Chart Review</span><br><span>(i.e. Does the donor have a history of heart disease?)</span></label>
+            </div>
+            <input type="submit" id="submit" value="Submit">
+        </form>
+        <div class="buttons">
+            <button id="reset" onclick="resetForm()">Reset</button>
+            <button id="download" onclick="downloadTable()">Download Answer</button>
+        </div>
+        <div id="loadingIndicator">Processing...</div>
+        <div id="answer" class="table-container"></div>
+        <button class="help-button" onclick="toggleHelp()">?</button>
+        <button class="github-button" onclick="navigateToGitHub()"><i class="fa-brands fa-github"></i></button>
+        <div class="help-content" id="helpContent">
+            <button onclick="toggleHelp()">×</button>
+            <h1>Help</h1>
+            <h2>ChatTS</h2>
+            <h4>Here are some tips to get you started:</h4>
+            <ol style="padding-left: 20px; margin-left: 0; text-align: left;">
+                <li>To use this application, you'll need an OpenAI API key. To get one, follow <a href="https://platform.openai.com/docs/quickstart/account-setup">these instructions</a>.
+                    <ul style="padding-left: 20px; margin-left: 0; text-align: left;">
+                        <li>Because we currently use only gpt-4o, you'll need to purchase $5 or more of OpenAI credits.</li>
+                        <li>Note: To get an API key, you don't have to write any code or install any software.</li>
+                    </ul>
+                </li>
+                <li>Enter your OpenAI API key in the provided field (your API key is not saved on the server after you end your session).</li>
+                <li>Ask your question about the donor's health condition, demographics, and social history, etc.</li>
+                <li>Select the answer style:</li>
+                    <ul style="padding-left: 20px; margin-left: 0; text-align: left;">
+                        <li><strong>Data Retriever</strong> for simple answers like 'yes', 'no', or a number</li>
+                        <li><strong>Chart Review</strong> for more detailed answers and supporting information.</li>
+                    </ul>
+                <li>Click "Submit" to get your answer.</li>
+                <li>Use the "Reset" button to clear the answer table content.</li>
+                <li>Click "Download Answer" to download the answer as a csv file.</li>
+                <li>Click the GitHub icon to visit our repo for ChatTS's usage demo and feel free to report bugs, issues, or feature requests.</li>
+            </ol>
+            <p>To ensure high-quality answers, we use gpt-4o from OpenAI for all requests. If you are seeing errors about your api quota, visit the <a href="https://platform.openai.com/docs/guides/rate-limits/usage-tiers?context=tier-one">OpenAI API usage tier documentation</a> for more information about the rate limits.</p>
+            <h2>Diagram for ChatTS pipeline</h2>
+            <img src="https://github.com/Harper-Hua/ChatTS/blob/main/%E2%80%8EchatTS.jpeg" alt="ChatTS Diagram">
+            <h2>A demo screenshot for an example question about heart disease</h2>
+            <img src="https://github.com/Harper-Hua/ChatTS/blob/main/demo1.png" alt="Demo Screenshot">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('questionForm').onsubmit = function(event) {
+            event.preventDefault();
+            document.getElementById('loadingIndicator').style.visibility = 'visible';
+            const params = new URLSearchParams(window.location.search);
+            const password = params.get('password');
+            const apiKey = document.getElementById('apiKey').value;
+            const actionUrl = '/ask?password=' + encodeURIComponent(password);
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: { 'Authorization': apiKey },
+                body: new FormData(document.getElementById('questionForm'))
+            }).then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingIndicator').style.visibility = 'hidden';
+                if (data.answer) {
+                    var converter = new showdown.Converter();
+                    var html = converter.makeHtml(data.answer);
+                    document.getElementById('answer').innerHTML = html;
+                } else if (data.error) {
+                    document.getElementById('answer').innerHTML = `<p>Error: ${data.error}</p>`;
+                }
+            }).catch(error => {
+                document.getElementById('loadingIndicator').style.visibility = 'hidden';
+                console.error('Error:', error);
+            });
+        };
+
+        document.getElementById('question').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                document.getElementById('questionForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        function resetForm() {
+            document.getElementById('answer').innerHTML = '';
+            const params = new URLSearchParams(window.location.search);
+            const password = params.get('password');
+            const actionUrl = '/reset?password=' + encodeURIComponent(password);
+            fetch(actionUrl, {
+                method: 'POST',
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            }).catch(error => console.error('Error:', error));
+        }
+
+        function downloadTable() {
+            const params = new URLSearchParams(window.location.search);
+            const password = params.get('password');
+            const actionUrl = '/download?password=' + encodeURIComponent(password);
+            window.location.href = actionUrl;
+        }
+
+        function toggleHelp() {
+            const helpContent = document.getElementById('helpContent');
+            helpContent.style.display = helpContent.style.display === 'none' || helpContent.style.display === '' ? 'block' : 'none';
+        }
+
+        function navigateToGitHub() {
+            window.location.href = 'https://github.com/Harper-Hua/ChatTS'; // Replace with your GitHub repo URL
+        }
+
+        window.addEventListener('beforeunload', function(event) {
+            const params = new URLSearchParams(window.location.search);
+            const password = params.get('password');
+            navigator.sendBeacon('/shutdown?password=' + encodeURIComponent(password));
+        });
+    </script>
+</body>
+</html>
